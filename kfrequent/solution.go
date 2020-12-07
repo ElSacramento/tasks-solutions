@@ -6,7 +6,7 @@ import (
 
 // must be less than O(nlogn), cant use heapSort
 func topKFrequentNums(nums []int, k int) []int {
-	counters := make(map[int]int, 0)
+	counters := make(map[int]int)
 	maxCount := 0
 	for _, v := range nums {
 		if _, found := counters[v]; found {
@@ -22,7 +22,7 @@ func topKFrequentNums(nums []int, k int) []int {
 		}
 	}
 
-	buckets := make([][]int, maxCount+1, maxCount+1)
+	buckets := make([][]int, maxCount+1)
 	for n, count := range counters {
 		items := buckets[count]
 		if len(items) == 0 {
@@ -87,7 +87,7 @@ func (w *wordsHeap) Pop() interface{} {
 
 // heapSort - O(nlogk)
 func topKFrequentWords(words []string, k int) []string {
-	counts := make(map[string]int, 0)
+	counts := make(map[string]int)
 
 	for _, s := range words {
 		counts[s] += 1
