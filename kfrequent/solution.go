@@ -2,6 +2,7 @@ package kfrequent
 
 import (
 	"container/heap"
+	"strings"
 )
 
 // must be less than O(nlogn), cant use heapSort
@@ -106,4 +107,39 @@ func topKFrequentWords(words []string, k int) []string {
 		response = append(response, word.value)
 	}
 	return response
+}
+
+// find most frequent word, that isn't banned - O(n)
+// space usage can be reduced by removing strings.FieldsFunc
+func mostCommonWord(paragraph string, banned []string) string {
+	words := strings.FieldsFunc(paragraph, func(r rune) bool {
+		return r == '!' || r == '?' || r == '\'' || r == ',' || r == ';' || r == '.' || r == ' '
+	})
+	for i := 0; i < len(words); i++ {
+		words[i] = strings.ToLower(words[i])
+	}
+
+	freq := make(map[string]int)
+	for _, s := range words {
+		if _, found := freq[s]; found {
+			freq[s]++
+			continue
+		}
+		freq[s] = 1
+	}
+
+	for _, s := range banned {
+		freq[s] = 0
+	}
+
+	maxCount := 0
+	maxWord := ""
+	for word, count := range freq {
+		if count > maxCount {
+			maxCount = count
+			maxWord = word
+		}
+	}
+
+	return maxWord
 }

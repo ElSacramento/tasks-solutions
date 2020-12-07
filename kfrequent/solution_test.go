@@ -33,3 +33,21 @@ func TestTopKFrequentWords(t *testing.T) {
 	result = topKFrequentWords(words, 4)
 	require.Equal(t, []string{"the", "is", "sunny", "day"}, result)
 }
+
+func TestMostCommonWord(t *testing.T) {
+	text := "Bob hit a ball, the hit BALL flew far after it was hit."
+	result := mostCommonWord(text, []string{"hit"})
+	require.Equal(t, "ball", result)
+
+	text = "a a, b a; b c"
+	result = mostCommonWord(text, []string{"a", "b"})
+	require.Equal(t, "c", result)
+
+	text = "a? a, b a; b c."
+	result = mostCommonWord(text, []string{})
+	require.Equal(t, "a", result)
+
+	text = "a, a, a, a, b,b,b,c, c"
+	result = mostCommonWord(text, []string{"a"})
+	require.Equal(t, "b", result)
+}
