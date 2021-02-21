@@ -143,3 +143,104 @@ func mostCommonWord(paragraph string, banned []string) string {
 
 	return maxWord
 }
+
+type symbolInfo struct {
+	count int
+	value rune
+}
+
+type heapInfo struct {
+	symbols []*symbolInfo
+}
+
+func (h heapInfo) Len() int {
+	return len(h.symbols)
+}
+
+func (h heapInfo) Swap(i, j int) {
+	h.symbols[i], h.symbols[j] = h.symbols[j], h.symbols[i]
+}
+
+func (h heapInfo) Less(i, j int) bool {
+	return h.symbols[i].count > h.symbols[j].count
+}
+
+func (h *heapInfo) Push(x interface{}) {
+	elem := x.(*symbolInfo)
+	h.symbols = append(h.symbols, elem)
+}
+
+func (h *heapInfo) Pop() interface{} {
+	n := len(h.symbols)
+	elem := h.symbols[n-1]
+	h.symbols = h.symbols[:n-1]
+	return elem
+}
+
+// O(nlogn) , space a lot
+// same symbols can't be close
+func reorganizeString(S string) string {
+	if len(S) == 1 {
+		return S
+	}
+
+	// space O(n), complexity O(n)
+	frequency := make(map[rune]int, 0)
+	for _, s := range S {
+		frequency[s]++
+	}
+
+	// space O(n), complexity O(n)
+	symbols := make([]*symbolInfo, 0, len(frequency))
+	for symbolRune, symbolCount := range frequency {
+		symbols = append(symbols, &symbolInfo{count: symbolCount, value: symbolRune})
+	}
+
+	sHeap := heapInfo{symbols: symbols}
+	// complexity O(n)
+	heap.Init(&sHeap)
+
+	// space O(n)
+	var prev rune
+	result := make([]rune, 0)
+	// complexity O(n * 5logn)
+	for sHeap.Len() != 0 {
+		// complexity O(logn)
+		elem := heap.Pop(&sHeap).(*symbolInfo)
+		if prev == 0 || (prev != 0 && prev != elem.value) {
+			result = append(result, elem.value)
+			prev = elem.value
+			elem.count--
+			// complexity O(logn)
+			if elem.count != 0 {
+				heap.Push(&sHeap, elem)
+			}
+			continue
+		}
+		// prev == elem.Value
+		if sHeap.Len() == 0 {
+			// impossible to find another symbol
+			return ""
+		}
+
+		// complexity O(logn)
+		nextElem := heap.Pop(&sHeap).(*symbolInfo)
+		result = append(result, nextElem.value)
+		prev = nextElem.value
+		nextElem.count--
+		// complexity O(logn)
+		if nextElem.count != 0 {
+			heap.Push(&sHeap, nextElem)
+		}
+		// complexity O(logn)
+		heap.Push(&sHeap, elem)
+	}
+
+	// complexity O(n)
+	var response string
+	for _, el := range result {
+		response += string(el)
+	}
+
+	return response
+}

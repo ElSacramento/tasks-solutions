@@ -51,3 +51,15 @@ func TestMostCommonWord(t *testing.T) {
 	result = mostCommonWord(text, []string{"a"})
 	require.Equal(t, "b", result)
 }
+
+func TestReorganizeString(t *testing.T) {
+	require.Equal(t, "aba", reorganizeString("aab"))
+	require.Equal(t, "", reorganizeString("aaab"))
+	require.Equal(t, "", reorganizeString("aa"))
+	require.Equal(t, "a", reorganizeString("a"))
+
+	{
+		result := reorganizeString("aabbc")
+		require.True(t, result == "ababc" || result == "babac")
+	}
+}
