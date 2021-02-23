@@ -48,20 +48,20 @@ func TestLowestCommonAncestor(t *testing.T) {
 	})
 }
 
-func toArray(root *TreeNode, values *[]int) {
-	if root == nil {
-		return
-	}
-	toArray(root.Left, values)
-	values = append(values, root.Val)
-	toArray(root.Right, values)
-}
-
-func TestBstFromPreorder(t *testing.T) {
-	t.Run("tree number one", func(t *testing.T) {
-		root := bstFromPreorder([]int{4, 3, 1, 8, 7})
-		result := make([]int, 0)
-		toArray(root, result)
-		require.Equal(t, []int{4, 3, 1}, result)
-	})
-}
+// func toArray(root *TreeNode, values *[]int) {
+// 	if root == nil {
+// 		return
+// 	}
+// 	toArray(root.Left, values)
+// 	values = append(values, root.Val)
+// 	toArray(root.Right, values)
+// }
+//
+// func TestBstFromPreorder(t *testing.T) {
+// 	t.Run("tree number one", func(t *testing.T) {
+// 		root := bstFromPreorder([]int{4, 3, 1, 8, 7})
+// 		result := make([]int, 0)
+// 		toArray(root, result)
+// 		require.Equal(t, []int{4, 3, 1}, result)
+// 	})
+// }
