@@ -6,6 +6,7 @@ import (
 )
 
 // must be less than O(nlogn), cant use heapSort
+// leetcode: 347
 func topKFrequentNums(nums []int, k int) []int {
 	counters := make(map[int]int)
 	maxCount := 0
@@ -87,6 +88,7 @@ func (w *wordsHeap) Pop() interface{} {
 }
 
 // heapSort - O(nlogk)
+// leetcode: 692
 func topKFrequentWords(words []string, k int) []string {
 	counts := make(map[string]int)
 
@@ -111,6 +113,7 @@ func topKFrequentWords(words []string, k int) []string {
 
 // find most frequent word, that isn't banned - O(n)
 // space usage can be reduced by removing strings.FieldsFunc
+// leetcode: 819
 func mostCommonWord(paragraph string, banned []string) string {
 	words := strings.FieldsFunc(paragraph, func(r rune) bool {
 		return r == '!' || r == '?' || r == '\'' || r == ',' || r == ';' || r == '.' || r == ' '

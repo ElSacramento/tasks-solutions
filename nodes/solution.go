@@ -7,6 +7,7 @@ type TreeNode struct {
 }
 
 // O(n)
+// leetcode: 235
 func lowestCommonAncestor(root, p, q *TreeNode) *TreeNode {
 	var anc *TreeNode
 	pDirection := 0
