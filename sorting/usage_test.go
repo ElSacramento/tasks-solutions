@@ -36,3 +36,29 @@ func TestOddEvenJumps(t *testing.T) {
 		require.Equal(t, 8, oddEvenJumps(arr))
 	}
 }
+
+func TestFiveStarReviews(t *testing.T) {
+	{
+		ratings := [][]int32{
+			{4, 4},
+			{1, 2},
+			{3, 6},
+		}
+		// the percentage for this seller is ((4 / 4) + (1/2) + (3/6))/3 = 66.66%
+		require.Equal(t, int32(3), fiveStarReviews(ratings, 77))
+	}
+	{
+		ratings := [][]int32{
+			{1, 2},
+			{1, 2},
+		}
+		require.Equal(t, int32(4), fiveStarReviews(ratings, 75))
+	}
+	{
+		ratings := [][]int32{
+			{2, 2},
+			{1, 2},
+		}
+		require.Equal(t, int32(1), fiveStarReviews(ratings, 80))
+	}
+}

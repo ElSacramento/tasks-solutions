@@ -1,6 +1,7 @@
 package nodes
 
 import (
+	"fmt"
 	"testing"
 
 	"github.com/stretchr/testify/require"
@@ -46,6 +47,46 @@ func TestLowestCommonAncestor(t *testing.T) {
 		result = lowestCommonAncestor(root, firstLevelLeafRight, secondLevelLeafRight2)
 		require.Equal(t, 10, result.Val)
 	})
+}
+
+func superPrint(head *RandomNode) {
+	node := head
+	for node != nil {
+		fmt.Printf("%p %+v -> ", node, *node)
+		node = node.Next
+	}
+	fmt.Println()
+}
+
+func TestCopyRandomList(t *testing.T) {
+	{
+		tailNode := RandomNode{
+			Val:    10,
+			Next:   nil,
+			Random: nil,
+		}
+		nodeSecond := RandomNode{
+			Val:    20,
+			Next:   &tailNode,
+			Random: nil,
+		}
+		nodeFirst := RandomNode{
+			Val:    100,
+			Next:   &nodeSecond,
+			Random: nil,
+		}
+		rootNode := RandomNode{
+			Val:  -1,
+			Next: &nodeFirst,
+		}
+		tailNode.Random = &nodeSecond
+		nodeFirst.Random = &tailNode
+		rootNode.Random = &rootNode
+
+		newHead := copyRandomList(&rootNode)
+		superPrint(&rootNode)
+		superPrint(newHead)
+	}
 }
 
 // func toArray(root *TreeNode, values *[]int) {
