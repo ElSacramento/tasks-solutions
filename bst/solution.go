@@ -138,7 +138,7 @@ func CreateBalancedBST(nums []int) *TreeNode {
 		return nil
 	}
 
-	heights := make(map[*TreeNode]int, 0)
+	heights := make(map[*TreeNode]int)
 	heights[nil] = -1
 
 	root := &TreeNode{Val: nums[0]}

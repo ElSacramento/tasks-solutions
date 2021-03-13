@@ -10,7 +10,7 @@ func longestSubstringRec(s string, start, end, k int) int {
 		return 0
 	}
 
-	countInfo := make([]int, 26, 26)
+	countInfo := make([]int, 26)
 	for i := start; i < end; i++ {
 		elem := s[i]
 		countInfo[elem-'a']++

@@ -10,7 +10,7 @@ func TestCreateTrie(t *testing.T) {
 	{
 		words := []string{"foobar", "football", "fake", "kate", "a"}
 		myTrie := CreateTrie(words)
-		require.Equal(t, 3, myTrie.children)
+		require.Equal(t, 3, len(myTrie.children))
 	}
 	{
 		words := []string{"foobar"}

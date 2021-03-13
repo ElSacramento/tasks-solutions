@@ -6,9 +6,9 @@ package nodes
 func findTheCity(n int, edges [][]int, distanceThreshold int) int {
 	// setup dp matrix
 	infinity := 100000
-	dp := make([][]int, n, n)
+	dp := make([][]int, n)
 	for i := 0; i < n; i++ { // O(n*n)
-		dp[i] = make([]int, n, n)
+		dp[i] = make([]int, n)
 		for j := 0; j < n; j++ {
 			if i == j {
 				dp[i][j] = 0 // from vertex X to vertex X

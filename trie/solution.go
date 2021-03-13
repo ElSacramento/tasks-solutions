@@ -66,7 +66,7 @@ func depthSearch(node *Node, pattern string, index int, founded map[string]struc
 }
 
 func patternMatch(root *Node, pattern string) map[string]struct{} {
-	foundWords := make(map[string]struct{}, 0)
+	foundWords := make(map[string]struct{})
 	depthSearch(root, pattern, 0, foundWords)
 	return foundWords
 }

@@ -49,8 +49,8 @@ func (p *PriorityQueue) Pop() interface{} {
 // https://www.baeldung.com/cs/graph-number-of-shortest-paths
 // weighted graph with undirected edges
 func NumberOfShortestPaths(nodes []*Node, startNodeIndex, endNodeIndex int) int {
-	distances := make([]int, len(nodes), len(nodes)) // space O(V)
-	paths := make([]int, len(nodes), len(nodes))     // space O(V)
+	distances := make([]int, len(nodes)) // space O(V)
+	paths := make([]int, len(nodes))     // space O(V)
 
 	paths[startNodeIndex] = 1     // from start to start
 	distances[startNodeIndex] = 0 // from start to start
@@ -111,7 +111,7 @@ func networkDelayTime(times [][]int, n int, k int) int {
 	heap.Init(&pq)
 	heap.Push(&pq, &Item{priority: 0, nodeIndex: k})
 
-	distances := make(map[int]int, 0)
+	distances := make(map[int]int)
 
 	for pq.Len() != 0 {
 		item := heap.Pop(&pq).(*Item)
@@ -181,13 +181,12 @@ func (d *DistancePriorityQueue) Pop() interface{} {
 // leetcode: 1631
 func minimumEffortPath(heights [][]int) int {
 	queue := make(DistancePriorityQueue, 0) // space O(n*n)
-	distances := make(map[[2]int]int, 0)    // space(n*n)
+	distances := make(map[[2]int]int)       // space(n*n)
 	rowsLen := len(heights)
 	columnsLen := len(heights[0])
 
 	heap.Push(&queue, [3]int{0, 0, 0})
-	found := false
-	for !found && queue.Len() != 0 { // O(n*n)
+	for queue.Len() != 0 { // O(n*n)
 		item := heap.Pop(&queue).([3]int)
 		d, row, column := item[0], item[1], item[2]
 
@@ -197,7 +196,6 @@ func minimumEffortPath(heights [][]int) int {
 
 		distances[[2]int{row, column}] = d
 		if row == rowsLen-1 && column == columnsLen-1 {
-			found = true
 			break
 		}
 

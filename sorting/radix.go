@@ -7,7 +7,7 @@ import (
 // O(n + base)
 func CountingSort(nums []int) []int {
 	base := 3 // because we can only have 0, 1, 2
-	frequency := make([]int, base, base)
+	frequency := make([]int, base)
 
 	// O(n)
 	for _, el := range nums {
@@ -30,7 +30,7 @@ func CountingSort(nums []int) []int {
 	indexes[0] = 0
 	fmt.Printf("%p\n", indexes)
 
-	result := make([]int, len(nums), len(nums))
+	result := make([]int, len(nums))
 	// O(n)
 	for _, el := range nums {
 		ind := indexes[el]
@@ -41,8 +41,8 @@ func CountingSort(nums []int) []int {
 }
 
 func sortColors(nums []int) {
-	base := 3                            // because we can only have 0, 1, 2
-	frequency := make([]int, base, base) // constant space
+	base := 3                      // because we can only have 0, 1, 2
+	frequency := make([]int, base) // constant space
 
 	// O(n)
 	for _, el := range nums {
@@ -67,7 +67,7 @@ func RadixSort(nums []int) {
 	length := 3 // because 0 <= elem < 1000
 
 	// space O(length)
-	powers := make([]int, length+1, length+1)
+	powers := make([]int, length+1)
 	powers[0] = 1
 	// O(length)
 	for i := 1; i <= length; i++ {
@@ -75,11 +75,11 @@ func RadixSort(nums []int) {
 	}
 
 	// space O(base)
-	frequency := make([]int, base, base)
+	frequency := make([]int, base)
 	var indexes []int
 
 	// space O(n)
-	tempo := make([]int, len(nums), len(nums))
+	tempo := make([]int, len(nums))
 
 	// O(length)
 	for i := 1; i <= length; i++ {
@@ -116,7 +116,7 @@ func RadixSort(nums []int) {
 		copy(nums, tempo)
 
 		// O(base)
-		for i, _ := range frequency {
+		for i := range frequency {
 			frequency[i] = 0
 		}
 	}

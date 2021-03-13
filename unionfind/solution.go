@@ -15,7 +15,7 @@ type PairInt struct {
 func Create() *UnionFind {
 	return &UnionFind{
 		parents:  make([]int, 0),
-		keyIndex: make(map[int]int, 0),
+		keyIndex: make(map[int]int),
 		edges:    make([]PairInt, 0),
 	}
 }

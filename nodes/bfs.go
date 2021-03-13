@@ -29,8 +29,8 @@ func shortestPathBinaryMatrix(grid [][]int) int {
 	}
 
 	// number of zeros = V -> n*n at max
-	queue := make([]pairInt, 0)           // space O(V)
-	distances := make(map[pairInt]int, 0) // space O(V)
+	queue := make([]pairInt, 0)        // space O(V)
+	distances := make(map[pairInt]int) // space O(V)
 
 	headIndex := 0
 	start := pairInt{x: 0, y: 0}

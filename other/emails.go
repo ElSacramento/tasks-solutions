@@ -3,7 +3,7 @@ package other
 // leetcode: 929
 // O(n*m) + space O(n)
 func numUniqueEmails(emails []string) int {
-	set := make(map[string]struct{}, 0)
+	set := make(map[string]struct{})
 	for _, em := range emails {
 		key := getRealEmail(em)
 		set[key] = struct{}{}

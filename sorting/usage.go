@@ -42,12 +42,12 @@ func oddEvenJumps(arr []int) int {
 	n := len(arr)
 
 	sortedASC := sortedInfo{
-		IntSlice: make(sort.IntSlice, n, n),
-		idx:      make([]int, n, n),
+		IntSlice: make(sort.IntSlice, n),
+		idx:      make([]int, n),
 	}
 	sortedDESC := sortedInfo{
-		IntSlice: make(sort.IntSlice, n, n),
-		idx:      make([]int, n, n),
+		IntSlice: make(sort.IntSlice, n),
+		idx:      make([]int, n),
 	}
 	for i := 0; i < n; i++ {
 		sortedASC.idx[i] = i
@@ -59,8 +59,8 @@ func oddEvenJumps(arr []int) int {
 	sort.Stable(sortedASC)
 	sort.Stable(sortedDESC)
 
-	oddNext := make([]int, n, n)
-	evenNext := make([]int, n, n)
+	oddNext := make([]int, n)
+	evenNext := make([]int, n)
 	for i := 0; i < n; i++ {
 		oddNext[i] = -1
 		evenNext[i] = -1
@@ -87,8 +87,8 @@ func oddEvenJumps(arr []int) int {
 	}
 
 	// DP
-	odd := make([]bool, n, n)
-	even := make([]bool, n, n)
+	odd := make([]bool, n)
+	even := make([]bool, n)
 	odd[n-1], even[n-1] = true, true
 
 	for i := len(arr) - 2; i >= 0; i-- {

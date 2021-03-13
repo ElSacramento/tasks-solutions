@@ -188,7 +188,7 @@ func reorganizeString(S string) string {
 	}
 
 	// space O(n), complexity O(n)
-	frequency := make(map[rune]int, 0)
+	frequency := make(map[rune]int)
 	for _, s := range S {
 		frequency[s]++
 	}
