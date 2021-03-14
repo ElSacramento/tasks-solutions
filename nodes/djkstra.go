@@ -179,6 +179,7 @@ func (d *DistancePriorityQueue) Pop() interface{} {
 }
 
 // leetcode: 1631
+// find path with minimum diff between heights
 func minimumEffortPath(heights [][]int) int {
 	queue := make(DistancePriorityQueue, 0) // space O(n*n)
 	distances := make(map[[2]int]int)       // space(n*n)
@@ -199,6 +200,7 @@ func minimumEffortPath(heights [][]int) int {
 			break
 		}
 
+		// up, down, left, right
 		pairs := possiblePairs(row, column)
 		for _, pair := range pairs {
 			i, j := pair[0], pair[1]

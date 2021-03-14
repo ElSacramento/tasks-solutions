@@ -32,3 +32,16 @@ func TestInsertIntoBST(t *testing.T) {
 		require.Equal(t, []int{8, 9}, inOrder)
 	}
 }
+
+func TestMaxLevelSum(t *testing.T) {
+	{
+		nums := []int{8, 6, 10, 4, 7}
+		root := CreateBST(nums)
+		require.Equal(t, 2, maxLevelSum(root))
+	}
+	{
+		nums := []int{8, 6, 10, 4, 7, 11}
+		root := CreateBST(nums)
+		require.Equal(t, 3, maxLevelSum(root))
+	}
+}

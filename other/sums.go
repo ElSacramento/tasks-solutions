@@ -5,6 +5,7 @@ import (
 )
 
 // O(n)
+// leetcode: 1010
 func numPairsDivisibleBy60(time []int) int {
 	counter := 0
 	// remainder: number of elements with such remainder
@@ -39,6 +40,7 @@ func count(nums []int, start, end, x, counter int) int {
 	return counter
 }
 
+// todo: find task description
 func minOperations(nums []int, x int) int {
 	counter := 0
 	lastInd := len(nums) - 1

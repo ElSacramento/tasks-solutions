@@ -22,6 +22,8 @@ func possibleNeighbours(x, y, n int) []pairInt {
 }
 
 // breadth-first-search
+// leetcode: 1091
+// go through cells where value is 0
 func shortestPathBinaryMatrix(grid [][]int) int {
 	last := len(grid) - 1
 	if grid[0][0] == 1 || grid[last][last] == 1 {
@@ -44,6 +46,7 @@ func shortestPathBinaryMatrix(grid [][]int) int {
 
 		x, y := node.x, node.y
 
+		// up, down, left, right
 		neighbours := possibleNeighbours(x, y, len(grid))
 		for _, nextNode := range neighbours {
 			if grid[nextNode.x][nextNode.y] == 0 {

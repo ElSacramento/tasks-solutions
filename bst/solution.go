@@ -161,6 +161,7 @@ func CreateBalancedBST(nums []int) *TreeNode {
 // for every node: |height(Tree left) - height(Tree right)| <= 1
 
 // return balanced binary search tree
+// leetcode: 1382
 func balanceBST(root *TreeNode) *TreeNode {
 	// O(n) + space O(n)
 	values := InOrderTraversal(root)

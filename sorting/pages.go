@@ -17,6 +17,7 @@ func (in Info) Less(i, j int) bool {
 	if in[i].value < in[j].value {
 		return true
 	}
+	// save names order
 	if in[i].value == in[j].value && in[i].name < in[j].name {
 		return true
 	}
