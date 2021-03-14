@@ -15,3 +15,14 @@ func TestNumPairsDivisibleBy60(t *testing.T) {
 
 	require.Equal(t, 1, numPairsDivisibleBy60([]int{20, 30, 40}))
 }
+
+func TestCalPoints(t *testing.T) {
+	{
+		ops := []string{"5", "2", "C", "D", "+"}
+		require.Equal(t, 30, calPoints(ops))
+	}
+	{
+		ops := []string{"5", "-2", "4", "C", "D", "9", "+", "+"}
+		require.Equal(t, 27, calPoints(ops))
+	}
+}

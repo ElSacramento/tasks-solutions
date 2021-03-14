@@ -176,3 +176,38 @@ func fiveStarReviews(productRatings [][]int32, ratingThreshold int32) int32 {
 	}
 	return int32(changes)
 }
+
+type Pairs [][2]int
+
+func (m Pairs) Len() int {
+	return len(m)
+}
+
+func (m Pairs) Less(i, j int) bool {
+	return m[i][0] < m[j][0]
+}
+
+func (m Pairs) Swap(i, j int) {
+	m[i], m[j] = m[j], m[i]
+}
+
+// leetcode: 973
+// calculate squares, sort and get k first
+// O(nlogn)
+func kClosest(points [][]int, K int) [][]int {
+	squares := make(Pairs, 0, len(points))
+
+	for i := 0; i < len(points); i++ {
+		sqr := points[i][0]*points[i][0] + points[i][1]*points[i][1]
+		squares = append(squares, [2]int{sqr, i})
+	}
+
+	sort.Sort(squares)
+
+	result := make([][]int, 0, K)
+	for i := 0; i < K; i++ {
+		index := squares[i][1]
+		result = append(result, points[index])
+	}
+	return result
+}

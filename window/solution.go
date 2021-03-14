@@ -1,6 +1,7 @@
 package window
 
 // sliding window O(n)
+// leetcode: 904
 func TotalFruit(tree []int) int {
 	var (
 		lastSwitch        = -1

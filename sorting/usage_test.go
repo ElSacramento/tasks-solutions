@@ -62,3 +62,14 @@ func TestFiveStarReviews(t *testing.T) {
 		require.Equal(t, int32(1), fiveStarReviews(ratings, 80))
 	}
 }
+
+func TestKClosest(t *testing.T) {
+	{
+		points := [][]int{
+			{3, 3},
+			{5, -1},
+			{-2, 7},
+		}
+		require.Equal(t, [][]int{{3, 3}, {5, -1}}, kClosest(points, 2))
+	}
+}

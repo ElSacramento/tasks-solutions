@@ -18,6 +18,8 @@ import (
 // [1, 5]
 // [1, 5, 7]
 
+// longest increasing subsequence
+// leetcode: 300
 func LengthOfLIS(nums []int) int {
 	sorted := make([]int, 0)
 	sorted = append(sorted, nums[0])

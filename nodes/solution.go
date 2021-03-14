@@ -6,7 +6,7 @@ type TreeNode struct {
 	Right *TreeNode
 }
 
-// O(n)
+// O(n) - worst, for balanced O(logn)
 // leetcode: 235
 func lowestCommonAncestor(root, p, q *TreeNode) *TreeNode {
 	var anc *TreeNode
@@ -55,6 +55,7 @@ func lowestCommonAncestor(root, p, q *TreeNode) *TreeNode {
 }
 
 // better solution
+// O(logn)
 // func lowestCommonAncestor(root, p, q *TreeNode) *TreeNode {
 // 	if root.Val < p.Val && root.Val < q.Val {
 // 		return lowestCommonAncestor(root.Right, p, q)
@@ -137,6 +138,50 @@ func copyRandomList(head *RandomNode) *RandomNode {
 		index++
 	}
 	return &newHead
+}
+
+type ListNode struct {
+	Val  int
+	Next *ListNode
+}
+
+// leetcode: 2
+// O(n)
+// sum two linked lists items
+func addTwoNumbers(l1 *ListNode, l2 *ListNode) *ListNode {
+	var (
+		result     ListNode
+		tempo, sum int
+	)
+	pointer := &result
+	for l1 != nil || l2 != nil {
+		if l1 != nil {
+			sum += l1.Val
+			l1 = l1.Next
+		}
+		if l2 != nil {
+			sum += l2.Val
+			l2 = l2.Next
+		}
+		if tempo != 0 {
+			sum += tempo
+			tempo = 0
+		}
+		if sum >= 10 {
+			sum %= 10
+			tempo = 1
+		}
+		pointer.Val = sum
+		if l1 != nil || l2 != nil {
+			pointer.Next = &ListNode{}
+			pointer = pointer.Next
+		}
+		sum = 0
+	}
+	if tempo != 0 {
+		pointer.Next = &ListNode{Val: tempo}
+	}
+	return &result
 }
 
 func traverse(root *TreeNode, val int) {

@@ -40,6 +40,8 @@ func CountingSort(nums []int) []int {
 	return result
 }
 
+// leetcode: 75
+// use radix sort, because we can only have 3 colors
 func sortColors(nums []int) {
 	base := 3                      // because we can only have 0, 1, 2
 	frequency := make([]int, base) // constant space

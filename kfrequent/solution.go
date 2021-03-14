@@ -182,6 +182,7 @@ func (h *heapInfo) Pop() interface{} {
 
 // O(nlogn) , space a lot
 // same symbols can't be close
+// leetcode: 767
 func reorganizeString(S string) string {
 	if len(S) == 1 {
 		return S

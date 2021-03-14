@@ -89,6 +89,65 @@ func TestCopyRandomList(t *testing.T) {
 	}
 }
 
+func getValues(root *ListNode) []int {
+	result := make([]int, 0)
+	curr := root
+	for curr != nil {
+		result = append(result, curr.Val)
+		curr = curr.Next
+	}
+	return result
+}
+
+func TestAddTwoNumbers(t *testing.T) {
+	{
+		root1 := &ListNode{
+			Val: 1,
+			Next: &ListNode{
+				Val: 2,
+				Next: &ListNode{
+					Val:  5,
+					Next: nil,
+				},
+			},
+		}
+		root2 := &ListNode{
+			Val: 6,
+			Next: &ListNode{
+				Val: 3,
+				Next: &ListNode{
+					Val:  7,
+					Next: nil,
+				},
+			},
+		}
+		result := addTwoNumbers(root1, root2)
+		require.Equal(t, []int{7, 5, 2, 1}, getValues(result))
+	}
+	{
+		root1 := &ListNode{
+			Val: 1,
+			Next: &ListNode{
+				Val:  2,
+				Next: nil,
+			},
+		}
+		root2 := &ListNode{
+			Val: 6,
+			Next: &ListNode{
+				Val: 3,
+				Next: &ListNode{
+					Val:  7,
+					Next: nil,
+				},
+			},
+		}
+		result := addTwoNumbers(root1, root2)
+		require.Equal(t, []int{7, 5, 7}, getValues(result))
+	}
+
+}
+
 // func toArray(root *TreeNode, values *[]int) {
 // 	if root == nil {
 // 		return

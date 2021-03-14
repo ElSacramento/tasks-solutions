@@ -1,5 +1,9 @@
 package other
 
+import (
+	"strconv"
+)
+
 // O(n)
 func numPairsDivisibleBy60(time []int) int {
 	counter := 0
@@ -58,4 +62,38 @@ func minOperations(nums []int, x int) int {
 	}
 
 	return counter
+}
+
+// leetcode: 682
+// simple calculation O(n) + space for sum on each step
+func calPoints(ops []string) int {
+	points := make([]int, len(ops))
+
+	prevInd := -1
+	for _, s := range ops {
+		switch s {
+		case "+":
+			points[prevInd+1] = points[prevInd] + points[prevInd-1]
+			prevInd++
+		case "D":
+			points[prevInd+1] = 2 * points[prevInd]
+			prevInd++
+		case "C":
+			points[prevInd] = 0
+			prevInd--
+		default:
+			val, err := strconv.Atoi(s)
+			if err != nil {
+				panic(err)
+			}
+			points[prevInd+1] = val
+			prevInd++
+		}
+	}
+
+	sum := 0
+	for _, v := range points {
+		sum += v
+	}
+	return sum
 }
