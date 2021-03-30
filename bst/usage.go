@@ -72,3 +72,35 @@ func maxLevelSum(root *TreeNode) int {
 	}
 	return maxLevel
 }
+
+// leetcode: 1008
+func bstFromPreorder(preorder []int) *TreeNode {
+	root := &TreeNode{Val: preorder[0]}
+
+	current := root
+	// O(nlogn)
+	for i := 1; i < len(preorder); i++ {
+		if preorder[i] < current.Val {
+			current.Left = &TreeNode{Val: preorder[i]}
+			current = current.Left
+			continue
+		}
+		current = findPlaceForRight(root, preorder[i])
+	}
+	return root
+}
+
+func findPlaceForRight(root *TreeNode, val int) *TreeNode {
+	prev := root
+	current := root
+	for current != nil {
+		prev = current
+		if val < current.Val {
+			current = current.Left
+			continue
+		}
+		current = current.Right
+	}
+	prev.Right = &TreeNode{Val: val}
+	return prev.Right
+}

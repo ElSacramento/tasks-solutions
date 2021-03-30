@@ -183,32 +183,3 @@ func addTwoNumbers(l1 *ListNode, l2 *ListNode) *ListNode {
 	}
 	return &result
 }
-
-func traverse(root *TreeNode, val int) {
-	prev := root
-	current := root
-	for current != nil {
-		prev = current
-		if current.Val > val {
-			current = current.Left
-		} else {
-			current = current.Right
-		}
-	}
-
-	if prev.Val > val {
-		prev.Left = &TreeNode{Val: val}
-	} else {
-		prev.Right = &TreeNode{Val: val}
-	}
-}
-
-// TODO
-func bstFromPreorder(preorder []int) *TreeNode {
-	root := &TreeNode{Val: preorder[0]}
-
-	for i := 1; i < len(preorder); i++ {
-		traverse(root, preorder[i])
-	}
-	return root
-}
