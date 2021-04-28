@@ -1,6 +1,7 @@
 package other
 
 import (
+	"sort"
 	"testing"
 
 	"github.com/stretchr/testify/require"
@@ -24,5 +25,66 @@ func TestCalPoints(t *testing.T) {
 	{
 		ops := []string{"5", "-2", "4", "C", "D", "9", "+", "+"}
 		require.Equal(t, 27, calPoints(ops))
+	}
+}
+
+func TestThreeSum(t *testing.T) {
+	{
+		nums := []int{1}
+		require.Equal(t, [][]int{}, threeSum(nums))
+	}
+	{
+		nums := []int{1, 2}
+		require.Equal(t, [][]int{}, threeSum(nums))
+	}
+	{
+		nums := []int{1, 2, 3}
+		require.Equal(t, [][]int{}, threeSum(nums))
+	}
+	{
+		nums := []int{1, 2, -3}
+		require.Equal(t, [][]int{{-3, 1, 2}}, threeSum(nums))
+	}
+	{
+		nums := []int{0, 0, 0, 0, 0}
+		require.Equal(t, [][]int{{0, 0, 0}}, threeSum(nums))
+	}
+	{
+		nums := []int{0, 0, 1, -1}
+		require.Equal(t, [][]int{{-1, 0, 1}}, threeSum(nums))
+	}
+	{
+		nums := []int{0, 3, -2, -3, -1}
+		require.Equal(t, [][]int{{-3, 0, 3}, {-2, -1, 3}}, threeSum(nums))
+	}
+	{
+		nums := []int{-1, 0, 1, 2, -1, -4}
+		result := threeSum(nums)
+		sort.Slice(result, func(i, j int) bool {
+			key1 := result[i][0]*100 + result[i][1]*10 + result[i][2]
+			key2 := result[j][0]*100 + result[j][1]*10 + result[j][2]
+			return key1 < key2
+		})
+		require.Equal(t, [][]int{{-1, -1, 2}, {-1, 0, 1}}, result)
+	}
+	{
+		nums := []int{-4, -2, 2, 0, 4, 1, 1, 3, -1, -1}
+		result := threeSum(nums)
+		sort.Slice(result, func(i, j int) bool {
+			key1 := result[i][0]*100 + result[i][1]*10 + result[i][2]
+			key2 := result[j][0]*100 + result[j][1]*10 + result[j][2]
+			return key1 < key2
+		})
+		require.Equal(t, [][]int{{-4, 0, 4}, {-4, 1, 3}, {-2, -1, 3}, {-2, 0, 2}, {-2, 1, 1}, {-1, -1, 2}, {-1, 0, 1}}, result)
+	}
+	{
+		nums := []int{-1, 0, 1, 2, -1, -4, -2, -3, 3, 0, 4}
+		result := threeSum(nums)
+		sort.Slice(result, func(i, j int) bool {
+			key1 := result[i][0]*100 + result[i][1]*10 + result[i][2]
+			key2 := result[j][0]*100 + result[j][1]*10 + result[j][2]
+			return key1 < key2
+		})
+		require.Equal(t, [][]int{{-4, 0, 4}, {-4, 1, 3}, {-3, -1, 4}, {-3, 0, 3}, {-3, 1, 2}, {-2, -1, 3}, {-2, 0, 2}, {-1, -1, 2}, {-1, 0, 1}}, result)
 	}
 }

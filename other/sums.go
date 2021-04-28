@@ -1,6 +1,7 @@
 package other
 
 import (
+	"sort"
 	"strconv"
 )
 
@@ -98,4 +99,49 @@ func calPoints(ops []string) int {
 		sum += v
 	}
 	return sum
+}
+
+// leetcode: 15
+// find all triplets with sum 0 , no duplicates
+func threeSum(nums []int) [][]int {
+	if len(nums) < 3 {
+		return [][]int{}
+	}
+
+	// O(nlogn)
+	sort.Ints(nums)
+
+	result := make([][]int, 0)
+	// looks like O(n*n)
+	for i, fixed := range nums {
+		first := i + 1
+		second := len(nums) - 1
+
+		// no duplicates
+		if i > 0 && nums[i-1] == nums[i] {
+			continue
+		}
+
+		for first < second {
+			if fixed+nums[first]+nums[second] > 0 {
+				second--
+				continue
+			} else if fixed+nums[first]+nums[second] < 0 {
+				first++
+				continue
+			}
+			if fixed+nums[first]+nums[second] == 0 {
+				triple := []int{fixed, nums[first], nums[second]}
+				sort.Ints(triple) // 3log3
+				result = append(result, triple)
+				first++
+				second--
+				// no duplicates
+				for first < second && nums[first-1] == nums[first] {
+					first++
+				}
+			}
+		}
+	}
+	return result
 }
