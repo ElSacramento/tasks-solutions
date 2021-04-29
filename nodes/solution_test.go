@@ -148,6 +148,91 @@ func TestAddTwoNumbers(t *testing.T) {
 
 }
 
+func TestInorderTraversal(t *testing.T) {
+	{
+		root := &TreeNode{
+			Val:  1,
+			Left: nil,
+			Right: &TreeNode{
+				Val:   2,
+				Right: nil,
+				Left: &TreeNode{
+					Val:   3,
+					Left:  nil,
+					Right: nil,
+				},
+			},
+		}
+		require.Equal(t, []int{1, 3, 2}, inorderTraversal(root))
+	}
+	{
+		root := &TreeNode{
+			Val:   1,
+			Right: nil,
+			Left: &TreeNode{
+				Val:   2,
+				Right: nil,
+				Left:  nil,
+			},
+		}
+		require.Equal(t, []int{2, 1}, inorderTraversal(root))
+	}
+	{
+		root := &TreeNode{
+			Val:  1,
+			Left: nil,
+			Right: &TreeNode{
+				Val:   2,
+				Right: nil,
+				Left:  nil,
+			},
+		}
+		require.Equal(t, []int{1, 2}, inorderTraversal(root))
+	}
+	{
+		leftHand := &TreeNode{
+			Val:   2,
+			Right: nil,
+			Left: &TreeNode{
+				Val:  4,
+				Left: nil,
+				Right: &TreeNode{
+					Val:   7,
+					Right: nil,
+					Left: &TreeNode{
+						Val:   8,
+						Left:  nil,
+						Right: nil,
+					},
+				},
+			},
+		}
+		rightHand := &TreeNode{
+			Val:   5,
+			Right: nil,
+			Left: &TreeNode{
+				Val:   3,
+				Left:  nil,
+				Right: nil,
+			},
+		}
+		root := &TreeNode{
+			Val:   1,
+			Right: rightHand,
+			Left:  leftHand,
+		}
+		require.Equal(t, []int{4, 8, 7, 2, 1, 3, 5}, inorderTraversal(root))
+	}
+	{
+		root := &TreeNode{
+			Val:   1,
+			Left:  nil,
+			Right: nil,
+		}
+		require.Equal(t, []int{1}, inorderTraversal(root))
+	}
+}
+
 // func toArray(root *TreeNode, values *[]int) {
 // 	if root == nil {
 // 		return

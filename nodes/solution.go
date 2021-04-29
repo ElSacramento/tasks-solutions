@@ -183,3 +183,73 @@ func addTwoNumbers(l1 *ListNode, l2 *ListNode) *ListNode {
 	}
 	return &result
 }
+
+type stack []*TreeNode
+
+func (s *stack) add(n *TreeNode) {
+	old := *s
+	old = append(old, n)
+	*s = old
+}
+
+func (s *stack) pop() *TreeNode {
+	old := *s
+	n := len(old)
+	value := old[n-1]
+	old = old[:n-1]
+	*s = old
+	return value
+}
+
+// leetcode: 94
+// binary tree, no rules
+// O(n) + space for stack O(n) + map O(n)
+func inorderTraversal(root *TreeNode) []int {
+	if root == nil {
+		return []int{}
+	}
+
+	nodesStack := make(stack, 0)
+	nodesStack.add(root)
+
+	visited := make(map[*TreeNode]struct{})
+	result := make([]int, 0)
+	current := root
+	// O(n)
+	for current != nil {
+		if _, ok := visited[current]; ok {
+			if len(nodesStack) == 0 {
+				current = nil
+			} else {
+				current = nodesStack.pop()
+			}
+			continue
+		}
+
+		if current.Left != nil {
+			if _, ok := visited[current.Left]; !ok {
+				nodesStack.add(current)
+				current = current.Left
+				continue
+			}
+		}
+
+		// inOrder
+		result = append(result, current.Val)
+		visited[current] = struct{}{}
+
+		if current.Right != nil {
+			if _, ok := visited[current.Right]; !ok {
+				current = current.Right
+				continue
+			}
+		}
+
+		if len(nodesStack) == 0 {
+			current = nil
+		} else {
+			current = nodesStack.pop()
+		}
+	}
+	return result
+}
