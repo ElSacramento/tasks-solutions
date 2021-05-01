@@ -23,3 +23,48 @@ func TestLengthOfLongestSubstring(t *testing.T) {
 	require.Equal(t, 3, lengthOfLongestSubstring("abcba"))
 	require.Equal(t, 0, lengthOfLongestSubstring(""))
 }
+
+func TestLetterCombinations(t *testing.T) {
+	{
+		st := "23"
+		expected := []string{"ad", "ae", "af", "bd", "be", "bf", "cd", "ce", "cf"}
+		require.Equal(t, expected, letterCombinations(st))
+	}
+	{
+		st := "9"
+		expected := []string{"w", "x", "y", "z"}
+		require.Equal(t, expected, letterCombinations(st))
+	}
+	{
+		require.Equal(t, []string{}, letterCombinations(""))
+	}
+	{
+		st := "37"
+		expected := []string{
+			"dp", "dq", "dr", "ds",
+			"ep", "eq", "er", "es",
+			"fp", "fq", "fr", "fs",
+		}
+		require.Equal(t, expected, letterCombinations(st))
+	}
+	{
+		st := "372"
+		expected := []string{
+			"dpa", "dpb", "dpc",
+			"dqa", "dqb", "dqc",
+			"dra", "drb", "drc",
+			"dsa", "dsb", "dsc",
+
+			"epa", "epb", "epc",
+			"eqa", "eqb", "eqc",
+			"era", "erb", "erc",
+			"esa", "esb", "esc",
+
+			"fpa", "fpb", "fpc",
+			"fqa", "fqb", "fqc",
+			"fra", "frb", "frc",
+			"fsa", "fsb", "fsc",
+		}
+		require.Equal(t, expected, letterCombinations(st))
+	}
+}
