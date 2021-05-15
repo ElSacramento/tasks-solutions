@@ -95,3 +95,26 @@ func TestSqrt(t *testing.T) {
 	require.Equal(t, 3, mySqrt(9))
 	require.Equal(t, 16, mySqrt(260))
 }
+
+func TestMostPopularFraction(t *testing.T) {
+	{
+		up := []int{1, 2, 3, 4}
+		down := []int{2, 4, 6, 5}
+		require.Equal(t, 3, mostPopularFraction(up, down))
+	}
+	{
+		up := []int{0, 0}
+		down := []int{2, 4}
+		require.Equal(t, 1, mostPopularFraction(up, down))
+	}
+	{
+		up := []int{1, 2, 3}
+		down := []int{1, 2, 7}
+		require.Equal(t, 2, mostPopularFraction(up, down))
+	}
+	{
+		up := []int{1, 5, 10, 4, 7}
+		down := []int{2, 7, 14, 3, 5}
+		require.Equal(t, 2, mostPopularFraction(up, down))
+	}
+}

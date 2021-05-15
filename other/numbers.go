@@ -157,3 +157,51 @@ func mySqrt(x int) int {
 	}
 	return ind - 1
 }
+
+// greatest common divisor
+// Euclidean algorithm
+// x > y
+func gcd(x, y int) int {
+	if y == 0 {
+		return x
+	}
+	return gcd(y, x%y)
+}
+
+func simplifyFraction(up, down int) (int, int) {
+	if up == 0 || down == 0 {
+		return up, down
+	}
+	x := up
+	y := down
+	if x < y {
+		x, y = y, x
+	}
+	div := gcd(x, y)
+	if up%div != 0 || down%div != 0 {
+		panic("error in gcd")
+	}
+	return up / div, down / div
+}
+
+// zalando: find most popular fraction and return it's counter
+func mostPopularFraction(up, down []int) int {
+	fractions := make(map[[2]int]int)
+	for i := 0; i < len(up); i++ {
+		x, y := simplifyFraction(up[i], down[i])
+		pair := [2]int{x, y}
+		if _, ok := fractions[pair]; ok {
+			fractions[pair]++
+			continue
+		}
+		fractions[pair] = 1
+	}
+
+	counter := 1
+	for _, v := range fractions {
+		if v > counter {
+			counter = v
+		}
+	}
+	return counter
+}
