@@ -88,3 +88,10 @@ func TestThreeSum(t *testing.T) {
 		require.Equal(t, [][]int{{-4, 0, 4}, {-4, 1, 3}, {-3, -1, 4}, {-3, 0, 3}, {-3, 1, 2}, {-2, -1, 3}, {-2, 0, 2}, {-1, -1, 2}, {-1, 0, 1}}, result)
 	}
 }
+
+func TestSqrt(t *testing.T) {
+	require.Equal(t, 2, mySqrt(8))
+	require.Equal(t, 2, mySqrt(4))
+	require.Equal(t, 3, mySqrt(9))
+	require.Equal(t, 16, mySqrt(260))
+}

@@ -145,3 +145,15 @@ func threeSum(nums []int) [][]int {
 	}
 	return result
 }
+
+// leetcode: 69
+func mySqrt(x int) int {
+	// O(logn)
+	ind := sort.Search(x, func(i int) bool {
+		return i*i >= x
+	})
+	if ind*ind == x {
+		return ind
+	}
+	return ind - 1
+}
