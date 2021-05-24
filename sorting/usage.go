@@ -211,3 +211,44 @@ func kClosest(points [][]int, K int) [][]int {
 	}
 	return result
 }
+
+// leetcode: 540
+// constant space and O(logN) time to find unique element in sorted array
+func singleNonDuplicate(nums []int) int {
+	length := 0
+	i := 0
+	left, right := 0, len(nums)-1
+	// O(logn) + constant space
+	for left < right {
+		i = left + (right-left)/2
+		// double is on the left
+		if i > 0 && nums[i] == nums[i-1] {
+			length = (i + 1) - left
+			// go right
+			if length%2 == 0 {
+				left = i + 1
+				continue
+			}
+			// go left
+			right = i - 2
+			continue
+		}
+		// double is on the right
+		if i < len(nums)-1 && nums[i] == nums[i+1] {
+			length = right - (i - 1)
+			// go left
+			if length%2 == 0 {
+				right = i - 1
+				continue
+			}
+			// go right
+			left = i + 2
+			continue
+		}
+		return nums[i]
+	}
+	if right < 0 {
+		return nums[left]
+	}
+	return nums[right]
+}

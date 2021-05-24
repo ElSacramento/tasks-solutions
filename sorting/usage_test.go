@@ -73,3 +73,26 @@ func TestKClosest(t *testing.T) {
 		require.Equal(t, [][]int{{3, 3}, {5, -1}}, kClosest(points, 2))
 	}
 }
+
+func TestSingleNonDuplicate(t *testing.T) {
+	{
+		nums := []int{1, 1, 2, 2, 3}
+		require.Equal(t, 3, singleNonDuplicate(nums))
+	}
+	{
+		nums := []int{1}
+		require.Equal(t, 1, singleNonDuplicate(nums))
+	}
+	{
+		nums := []int{3, 3, 7, 7, 10, 11, 11}
+		require.Equal(t, 10, singleNonDuplicate(nums))
+	}
+	{
+		nums := []int{1, 2, 2, 3, 3}
+		require.Equal(t, 1, singleNonDuplicate(nums))
+	}
+	{
+		nums := []int{1, 1, 2, 3, 3}
+		require.Equal(t, 2, singleNonDuplicate(nums))
+	}
+}
