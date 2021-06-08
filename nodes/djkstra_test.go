@@ -145,3 +145,36 @@ func TestMinimumEffortPath(t *testing.T) {
 		require.Equal(t, 6, minimumEffortPath(heights))
 	}
 }
+
+func TestMaxProbability(t *testing.T) {
+	{
+		edges := [][]int{{0, 1}, {1, 2}, {2, 0}}
+		prob := []float64{0.5, 0.5, 0.2}
+		require.Equal(t, 0.25, maxProbability(3, edges, prob, 0, 2))
+	}
+	{
+		edges := [][]int{{0, 1}, {1, 2}, {2, 0}}
+		prob := []float64{0.5, 0.5, 0.3}
+		require.Equal(t, 0.3, maxProbability(3, edges, prob, 0, 2))
+	}
+	{
+		edges := [][]int{{0, 1}}
+		prob := []float64{0.5}
+		require.Equal(t, float64(0), maxProbability(3, edges, prob, 0, 2))
+	}
+	{
+		edges := [][]int{{0, 1}, {1, 2}, {2, 3}, {3, 4}, {0, 5}, {5, 4}}
+		prob := []float64{0.1, 0.2, 0.3, 0.4, 0.005, 0.07}
+		require.Equal(t, 0.0024000000000000002, maxProbability(6, edges, prob, 0, 4))
+	}
+	{
+		edges := [][]int{{0, 1}, {1, 2}, {2, 3}, {1, 3}}
+		prob := []float64{0.1, 0.7, 0.1, 0.8}
+		require.Equal(t, 0.08000000000000002, maxProbability(4, edges, prob, 0, 3))
+	}
+	{
+		edges := [][]int{{0, 1}, {1, 2}, {0, 3}, {3, 2}}
+		prob := []float64{0.3, 0.5, 0.4, 0.4}
+		require.Equal(t, 0.16000000000000003, maxProbability(4, edges, prob, 0, 2))
+	}
+}

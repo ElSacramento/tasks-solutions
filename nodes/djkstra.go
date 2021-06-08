@@ -2,6 +2,7 @@ package nodes
 
 import (
 	"container/heap"
+	"math"
 )
 
 type Node struct {
@@ -240,4 +241,112 @@ func possiblePairs(row, column int) [][2]int {
 		{row - 1, column},
 		{row + 1, column},
 	}
+}
+
+type pqElem struct {
+	from     int
+	to       int
+	priority float64
+}
+
+type pqValues []pqElem
+
+func (pq pqValues) Len() int {
+	return len(pq)
+}
+
+func (pq pqValues) Less(i, j int) bool {
+	return pq[i].priority > pq[j].priority
+}
+
+func (pq pqValues) Swap(i, j int) {
+	pq[i], pq[j] = pq[j], pq[i]
+}
+
+func (pq *pqValues) Pop() interface{} {
+	old := *pq
+	n := len(old)
+	elem := old[n-1]
+	*pq = old[:n-1]
+	return elem
+}
+
+func (pq *pqValues) Push(v interface{}) {
+	old := *pq
+	old = append(old, v.(pqElem))
+	*pq = old
+}
+
+func newSortedPair(x, y int) [2]int {
+	if x < y {
+		return [2]int{x, y}
+	}
+	return [2]int{y, x}
+}
+
+// leetcode: 1514
+// use Djkstra, but bfs is easier
+// a lot of space, enormous! + O((V+E)logV)
+func maxProbability(n int, edges [][]int, succProb []float64, start int, end int) float64 {
+	distances := make([]float64, n)
+	paths := make([]int, n)
+
+	for i := 0; i < n; i++ {
+		distances[i] = -math.MaxFloat64
+		paths[i] = -1
+	}
+
+	pairs := make(map[[2]int]int)
+	vertexes := make(map[int][][2]int)
+	for i, edge := range edges {
+		from, to := edge[0], edge[1]
+		pairs[newSortedPair(from, to)] = i
+
+		if from != end && to != start {
+			vertexes[from] = append(vertexes[from], [2]int{to, i})
+		}
+		if from != start && to != end {
+			vertexes[to] = append(vertexes[to], [2]int{from, i})
+		}
+	}
+
+	pq := make(pqValues, 0)
+	pq = append(pq, pqElem{from: start, to: start, priority: 0})
+	heap.Init(&pq)
+
+	for pq.Len() != 0 {
+		// O(VlogV)
+		elem := heap.Pop(&pq).(pqElem)
+
+		if distances[elem.to] > elem.priority && elem.to != start {
+			// already visited
+			continue
+		}
+		distances[elem.to] = elem.priority
+		paths[elem.to] = elem.from
+		from := elem.to
+		// O(ElogV)
+		for _, edge := range vertexes[from] {
+			to, probInd := edge[0], edge[1]
+			if to == elem.from {
+				continue // do nothing
+			}
+			cost := elem.priority + math.Log(succProb[probInd])
+			if cost > distances[to] {
+				heap.Push(&pq, pqElem{from: from, to: to, priority: cost})
+			}
+		}
+	}
+
+	var result float64 = 1
+	for end != start {
+		if paths[end] == -1 {
+			return 0
+		}
+		probInd := pairs[newSortedPair(end, paths[end])]
+		cost := succProb[probInd]
+		result *= cost
+		end = paths[end]
+	}
+	return result
 }
