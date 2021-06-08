@@ -68,3 +68,31 @@ func TestLetterCombinations(t *testing.T) {
 		require.Equal(t, expected, letterCombinations(st))
 	}
 }
+
+func TestAlphabetBoardPath(t *testing.T) {
+	{
+		st := "leet"
+		expected := "DDR!UURRR!!DDD!"
+		require.Equal(t, expected, alphabetBoardPath(st))
+	}
+	{
+		st := "code"
+		expected := "RR!DDRR!UUL!R!"
+		require.Equal(t, expected, alphabetBoardPath(st))
+	}
+	{
+		st := "a"
+		expected := "!"
+		require.Equal(t, expected, alphabetBoardPath(st))
+	}
+	{
+		st := "m"
+		expected := "DDRR!"
+		require.Equal(t, expected, alphabetBoardPath(st))
+	}
+	{
+		st := "dzy"
+		expected := "RRR!LLLDDDDD!URRRR!"
+		require.Equal(t, expected, alphabetBoardPath(st))
+	}
+}

@@ -1,6 +1,7 @@
 package kfrequent
 
 import (
+	"sort"
 	"testing"
 
 	"github.com/stretchr/testify/require"
@@ -9,6 +10,7 @@ import (
 func TestTopKFrequentNums(t *testing.T) {
 	numbers := []int{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 1, 1, 2, 2, 2, 2, 4, 4, 4, 4, 5, 5, 5, 6, 6}
 	result := topKFrequentNums(numbers, 3)
+	sort.Ints(result)
 	require.Equal(t, []int{2, 4, 5}, result)
 
 	numbers = []int{1, 1, 1, 2, 2, 3}

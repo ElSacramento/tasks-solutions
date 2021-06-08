@@ -1,5 +1,9 @@
 package other
 
+import (
+	"strings"
+)
+
 // leetcode: 1328
 // change minimum chars to break a palindrome + lexicographically smaller
 // O(n)
@@ -41,8 +45,8 @@ func lengthOfLongestSubstring(s string) int {
 
 	left, right := 0, 0
 	maxCount := 1
-	indexes := make(map[byte]int, 0) // space O(n)
-	indexes[s[0]] = 1                // index + 1
+	indexes := make(map[byte]int) // space O(n)
+	indexes[s[0]] = 1             // index + 1
 	for right != len(s)-1 {
 		right += 1
 
@@ -121,4 +125,69 @@ func letterCombinations(digits string) []string {
 		}
 	}
 	return result
+}
+
+func findRow(rowDiff int) string {
+	result := make([]string, 0)
+	for rowDiff > 0 {
+		result = append(result, "D")
+		rowDiff--
+	}
+	for rowDiff < 0 {
+		result = append(result, "U")
+		rowDiff++
+	}
+	return strings.Join(result, "")
+}
+
+func findColumn(columnDiff int) string {
+	result := make([]string, 0)
+	for columnDiff > 0 {
+		result = append(result, "R")
+		columnDiff--
+	}
+	for columnDiff < 0 {
+		result = append(result, "L")
+		columnDiff++
+	}
+	return strings.Join(result, "")
+}
+
+// leetcode: 1138
+// find path on the board
+// O(6n) ~ O(n) just linear time
+func alphabetBoardPath(target string) string {
+	symbols := make(map[rune][2]int, 26)
+	row, column := 0, 0
+	// O(26) + space for a map O(26*sizeOf(key-value))
+	for s := 'a'; s <= 'z'; s++ {
+		symbols[s] = [2]int{row, column}
+		if column == 4 {
+			column = 0
+			row++
+			continue
+		}
+		column++
+	}
+
+	result := make([]string, 0)
+	current := [2]int{0, 0}
+	// O(n*6)
+	for _, s := range target {
+		next := symbols[s]
+		rowDiff := next[0] - current[0]
+		columnDiff := next[1] - current[1]
+		if s == 'z' {
+			// O(5) + O(6)
+			result = append(result, findColumn(columnDiff))
+			result = append(result, findRow(rowDiff))
+		} else {
+			result = append(result, findRow(rowDiff))
+			result = append(result, findColumn(columnDiff))
+		}
+		result = append(result, "!")
+		current = next
+	}
+	// O(n) for join
+	return strings.Join(result, "")
 }
