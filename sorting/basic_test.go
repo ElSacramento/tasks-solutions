@@ -33,6 +33,12 @@ func TestBasicSorts(t *testing.T) {
 			expected: []int{1, 2, 3, 4},
 		},
 	}
+	withDuples := []testCase{
+		{
+			nums:     []int{5, 1, 1, 2, 0, 0},
+			expected: []int{0, 0, 1, 1, 2, 5},
+		},
+	}
 	for _, elem := range cases {
 		t.Run("qsort", func(t *testing.T) {
 			quickSort(elem.nums)
@@ -41,6 +47,16 @@ func TestBasicSorts(t *testing.T) {
 		t.Run("insertion sort", func(t *testing.T) {
 			insertionSort(elem.nums)
 			require.Equal(t, elem.expected, elem.nums)
+		})
+		t.Run("merge sort", func(t *testing.T) {
+			result := mergeSort(elem.nums)
+			require.Equal(t, elem.expected, result)
+		})
+	}
+	for _, elem := range withDuples {
+		t.Run("merge sort", func(t *testing.T) {
+			result := mergeSort(elem.nums)
+			require.Equal(t, elem.expected, result)
 		})
 	}
 }
