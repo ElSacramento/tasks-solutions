@@ -96,3 +96,21 @@ func TestAlphabetBoardPath(t *testing.T) {
 		require.Equal(t, expected, alphabetBoardPath(st))
 	}
 }
+
+func TestReverseString(t *testing.T) {
+	{
+		s := []byte{'h', 'e', 'l', 'l', 'o'}
+		reverseString(s)
+		require.Equal(t, []byte{'o', 'l', 'l', 'e', 'h'}, s)
+	}
+	{
+		s := []byte{'H', 'e', 'l', 'l'}
+		reverseString(s)
+		require.Equal(t, []byte{'l', 'l', 'e', 'H'}, s)
+	}
+	{
+		s := []byte{'h'}
+		reverseString(s)
+		require.Equal(t, []byte{'h'}, s)
+	}
+}

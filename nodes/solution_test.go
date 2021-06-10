@@ -250,3 +250,122 @@ func TestInorderTraversal(t *testing.T) {
 // 		require.Equal(t, []int{4, 3, 1}, result)
 // 	})
 // }
+
+func TestDeleteNode(t *testing.T) {
+	{
+		head := &ListNode{
+			Val: 10,
+			Next: &ListNode{
+				Val: -2,
+				Next: &ListNode{
+					Val:  7,
+					Next: nil,
+				},
+			},
+		}
+		deleteNode(head.Next)
+		require.Equal(t, []int{10, 7}, getValues(head))
+	}
+	{
+		head := &ListNode{
+			Val: 10,
+			Next: &ListNode{
+				Val:  -2,
+				Next: nil,
+			},
+		}
+		deleteNode(head)
+		require.Equal(t, []int{-2}, getValues(head))
+	}
+	{
+		head := &ListNode{
+			Val: 10,
+			Next: &ListNode{
+				Val: -2,
+				Next: &ListNode{
+					Val: 7,
+					Next: &ListNode{
+						Val:  0,
+						Next: nil,
+					},
+				},
+			},
+		}
+		deleteNode(head.Next.Next)
+		require.Equal(t, []int{10, -2, 0}, getValues(head))
+	}
+}
+
+func TestMaxDepth(t *testing.T) {
+	{
+		root := &TreeNode{
+			Val:  1,
+			Left: nil,
+			Right: &TreeNode{
+				Val: 2,
+			},
+		}
+		require.Equal(t, 2, maxDepth(root))
+	}
+	{
+		root := &TreeNode{
+			Val:   1,
+			Right: nil,
+			Left: &TreeNode{
+				Val: 2,
+			},
+		}
+		require.Equal(t, 2, maxDepth(root))
+	}
+	{
+		root := &TreeNode{
+			Val: 1,
+			Left: &TreeNode{
+				Val: 10,
+			},
+			Right: &TreeNode{
+				Val: 2,
+			},
+		}
+		require.Equal(t, 2, maxDepth(root))
+	}
+	{
+		leftHand := &TreeNode{
+			Val:   2,
+			Right: nil,
+			Left: &TreeNode{
+				Val:  4,
+				Left: nil,
+				Right: &TreeNode{
+					Val:   7,
+					Right: nil,
+					Left: &TreeNode{
+						Val: 8,
+					},
+				},
+			},
+		}
+		rightHand := &TreeNode{
+			Val:   5,
+			Right: nil,
+			Left: &TreeNode{
+				Val: 3,
+			},
+		}
+		root := &TreeNode{
+			Val:   1,
+			Right: rightHand,
+			Left:  leftHand,
+		}
+		require.Equal(t, 5, maxDepth(root))
+	}
+	{
+		root := &TreeNode{
+			Val: 1,
+		}
+		require.Equal(t, 1, maxDepth(root))
+	}
+	{
+		require.Equal(t, 0, maxDepth(nil))
+	}
+}

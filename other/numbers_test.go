@@ -118,3 +118,31 @@ func TestMostPopularFraction(t *testing.T) {
 		require.Equal(t, 2, mostPopularFraction(up, down))
 	}
 }
+
+func TestRemoveDuplicates(t *testing.T) {
+	{
+		nums := []int{1, 1, 2}
+		require.Equal(t, 2, removeDuplicates(nums))
+		require.Equal(t, []int{1, 2, 2}, nums)
+	}
+	{
+		nums := []int{1, 2}
+		require.Equal(t, 2, removeDuplicates(nums))
+		require.Equal(t, []int{1, 2}, nums)
+	}
+	{
+		nums := []int{1}
+		require.Equal(t, 1, removeDuplicates(nums))
+		require.Equal(t, []int{1}, nums)
+	}
+	{
+		nums := make([]int, 0)
+		require.Equal(t, 0, removeDuplicates(nums))
+		require.Equal(t, []int{}, nums)
+	}
+	{
+		nums := []int{0, 0, 1, 1, 1, 2, 2, 3, 3, 4}
+		require.Equal(t, 5, removeDuplicates(nums))
+		require.Equal(t, []int{0, 1, 2, 3, 4, 2, 2, 3, 3, 4}, nums)
+	}
+}

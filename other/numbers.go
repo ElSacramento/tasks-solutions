@@ -205,3 +205,22 @@ func mostPopularFraction(up, down []int) int {
 	}
 	return counter
 }
+
+// leetcode: 26
+// remove duplicates in place - no extra memory
+func removeDuplicates(nums []int) int {
+	if len(nums) <= 1 {
+		return len(nums)
+	}
+
+	lastIndex := 0
+	currentIndex := 1
+	for currentIndex != len(nums) {
+		if nums[currentIndex] != nums[lastIndex] {
+			lastIndex++
+			nums[lastIndex] = nums[currentIndex]
+		}
+		currentIndex++
+	}
+	return lastIndex + 1
+}

@@ -253,3 +253,33 @@ func inorderTraversal(root *TreeNode) []int {
 	}
 	return result
 }
+
+// leetcode: 237
+// without head ref
+func deleteNode(node *ListNode) {
+	*node = *node.Next
+}
+
+func findDepth(node *TreeNode, depth int) int {
+	leftDepth := depth
+	rightDepth := depth
+	if node.Left != nil {
+		leftDepth = findDepth(node.Left, depth+1)
+	}
+	if node.Right != nil {
+		rightDepth = findDepth(node.Right, depth+1)
+	}
+	if leftDepth > rightDepth {
+		return leftDepth
+	}
+	return rightDepth
+}
+
+// leetcode: 104
+// visit all nodes in recursive way: O(n)
+func maxDepth(root *TreeNode) int {
+	if root == nil {
+		return 0
+	}
+	return findDepth(root, 1)
+}
