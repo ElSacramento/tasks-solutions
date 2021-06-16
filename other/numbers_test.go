@@ -146,3 +146,41 @@ func TestRemoveDuplicates(t *testing.T) {
 		require.Equal(t, []int{0, 1, 2, 3, 4, 2, 2, 3, 3, 4}, nums)
 	}
 }
+
+func TestMergeArrays(t *testing.T) {
+	{
+		nums1 := []int{1, 2, 0, 0}
+		nums2 := []int{2, 3}
+		expected := []int{1, 2, 2, 3}
+		merge(nums1, 2, nums2, 2)
+		require.Equal(t, expected, nums1)
+	}
+	{
+		nums1 := []int{0, 0}
+		nums2 := []int{2, 3}
+		expected := []int{2, 3}
+		merge(nums1, 0, nums2, 2)
+		require.Equal(t, expected, nums1)
+	}
+	{
+		nums1 := []int{1}
+		nums2 := make([]int, 0)
+		expected := []int{1}
+		merge(nums1, 1, nums2, 0)
+		require.Equal(t, expected, nums1)
+	}
+	{
+		nums1 := []int{1, 4, 0, 0, 0}
+		nums2 := []int{2, 3, 5}
+		expected := []int{1, 2, 3, 4, 5}
+		merge(nums1, 2, nums2, 3)
+		require.Equal(t, expected, nums1)
+	}
+	{
+		nums1 := []int{-7, 1, 4, 8, 0, 0}
+		nums2 := []int{2, 3}
+		expected := []int{-7, 1, 2, 3, 4, 8}
+		merge(nums1, 4, nums2, 2)
+		require.Equal(t, expected, nums1)
+	}
+}

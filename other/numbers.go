@@ -224,3 +224,25 @@ func removeDuplicates(nums []int) int {
 	}
 	return lastIndex + 1
 }
+
+// O(m+n) time
+// leetcode: 88
+// no additional memory
+func merge(nums1 []int, m int, nums2 []int, n int) {
+	if n == 0 {
+		return
+	}
+	i, j := m-1, n-1
+	for rightInd := m + n - 1; rightInd >= 0; rightInd-- {
+		if j < 0 {
+			break // no more elements
+		}
+		if i >= 0 && nums2[j] < nums1[i] {
+			nums1[rightInd] = nums1[i]
+			i--
+		} else {
+			nums1[rightInd] = nums2[j]
+			j--
+		}
+	}
+}
