@@ -36,3 +36,38 @@ func TestNumTimesAllBlue(t *testing.T) {
 		require.Equal(t, 3, numTimesAllBlue(light))
 	}
 }
+
+func TestIsValidBrackets(t *testing.T) {
+	{
+		s := "([{}])"
+		require.True(t, isValid(s))
+	}
+	{
+		s := "()"
+		require.True(t, isValid(s))
+	}
+	{
+		s := "(){}[]"
+		require.True(t, isValid(s))
+	}
+	{
+		s := "(]"
+		require.False(t, isValid(s))
+	}
+	{
+		s := "([)]"
+		require.False(t, isValid(s))
+	}
+	{
+		s := "{{[[(())]]}}"
+		require.True(t, isValid(s))
+	}
+	{
+		s := "{[(])}"
+		require.False(t, isValid(s))
+	}
+	{
+		s := "("
+		require.False(t, isValid(s))
+	}
+}

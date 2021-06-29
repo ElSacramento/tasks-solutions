@@ -43,3 +43,50 @@ func numTimesAllBlue(light []int) int {
 	}
 	return counter
 }
+
+func open(s rune) bool {
+	if s == '(' || s == '{' || s == '[' {
+		return true
+	}
+	return false
+}
+
+func isPair(a, b rune) bool {
+	if a == '(' && b == ')' {
+		return true
+	}
+	if a == '{' && b == '}' {
+		return true
+	}
+	if a == '[' && b == ']' {
+		return true
+	}
+	return false
+}
+
+// leetcode: 20
+// valid brackets order
+// O(n)
+func isValid(s string) bool {
+	stack := make([]rune, 0)
+	for _, elem := range s {
+		if len(stack) == 0 {
+			stack = append(stack, elem)
+			continue
+		}
+		if open(elem) {
+			stack = append(stack, elem)
+			continue
+		}
+		// closed
+		last := stack[len(stack) - 1]
+		if !isPair(last, elem) {
+			return false
+		}
+		stack = stack[:len(stack)-1]
+	}
+	if len(stack) != 0 {
+		return false
+	}
+	return true
+}

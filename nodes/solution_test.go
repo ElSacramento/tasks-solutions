@@ -369,3 +369,90 @@ func TestMaxDepth(t *testing.T) {
 		require.Equal(t, 0, maxDepth(nil))
 	}
 }
+
+func TestLevelOrderTraversal(t *testing.T) {
+	{
+		root := &TreeNode{
+			Val:  3,
+			Left: &TreeNode{
+				Val: 9,
+			},
+			Right: &TreeNode{
+				Val:   20,
+				Left: &TreeNode{
+					Val:   15,
+				},
+				Right: &TreeNode{
+					Val: 7,
+				},
+			},
+		}
+		require.Equal(t, [][]int{{3}, {9, 20}, {15, 7}}, levelOrder(root))
+	}
+	{
+		root := &TreeNode{
+			Val:  3,
+		}
+		require.Equal(t, [][]int{{3}}, levelOrder(root))
+	}
+	{
+		require.Equal(t, [][]int{}, levelOrder(nil))
+	}
+	{
+		root := &TreeNode{
+			Val:  3,
+			Right: &TreeNode{
+				Val:   20,
+				Right: &TreeNode{
+					Val: 7,
+					Right: &TreeNode{
+						Val: 10,
+					},
+				},
+			},
+		}
+		require.Equal(t, [][]int{{3}, {20}, {7}, {10}}, levelOrder(root))
+	}
+	{
+		root := &TreeNode{
+			Val:  3,
+			Left: &TreeNode{
+				Val: 9,
+				Left: &TreeNode{
+					Val: 5,
+					Left: &TreeNode{
+						Val: 45,
+					},
+					Right: &TreeNode{
+						Val: 23,
+					},
+				},
+				Right: &TreeNode{
+					Val: 22,
+					Left: &TreeNode{
+						Val: 12,
+					},
+					Right: &TreeNode{
+						Val: 9801,
+					},
+				},
+			},
+			Right: &TreeNode{
+				Val:   20,
+				Left: &TreeNode{
+					Val:   15,
+					Left: &TreeNode{
+						Val: 17,
+					},
+					Right: &TreeNode{
+						Val: 99,
+					},
+				},
+				Right: &TreeNode{
+					Val: 7,
+				},
+			},
+		}
+		require.Equal(t, [][]int{{3}, {9, 20}, {5, 22, 15, 7}, {45, 23, 12, 9801, 17, 99}}, levelOrder(root))
+	}
+}

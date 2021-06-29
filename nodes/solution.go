@@ -283,3 +283,34 @@ func maxDepth(root *TreeNode) int {
 	}
 	return findDepth(root, 1)
 }
+
+func traverse(node *TreeNode, level int, result *[][]int) {
+	if node == nil {
+		return
+	}
+	if len(*result) <= level {
+		tempo := *result
+		tempo = append(tempo, []int{node.Val})
+		*result = tempo
+	} else {
+		tempo := *result
+		tempo[level] = append(tempo[level], node.Val)
+		*result = tempo
+	}
+	traverse(node.Left, level+1, result)
+	traverse(node.Right, level+1, result)
+}
+
+// leetcode: 102
+// visit all nodes O(n)
+func levelOrder(root *TreeNode) [][]int {
+	if root == nil {
+		return [][]int{}
+	}
+
+	result := make([][]int, 0)
+	result = append(result, []int{root.Val})
+	traverse(root.Left, 1, &result)
+	traverse(root.Right, 1, &result)
+	return result
+}
