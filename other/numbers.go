@@ -246,3 +246,34 @@ func merge(nums1 []int, m int, nums2 []int, n int) {
 		}
 	}
 }
+
+// leetcode: 189
+// O(n)
+func rotate(nums []int, k int)  {
+	if k > len(nums) {
+		k = k%len(nums)
+	}
+	if k == 0 {
+		return
+	}
+
+	j := len(nums) - 1
+	for i := 0; i < len(nums)/2; i++ {
+		nums[i], nums[j] = nums[j], nums[i]
+		j--
+	}
+
+	j = len(nums) - 1
+	l := k + (len(nums) - k)/2
+	for i := k; i < l; i++ {
+		nums[i], nums[j] = nums[j], nums[i]
+		j--
+	}
+
+	j = k - 1
+	l = k/2
+	for i := 0; i < l; i++ {
+		nums[i], nums[j] = nums[j], nums[i]
+		j--
+	}
+}

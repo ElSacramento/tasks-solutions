@@ -456,3 +456,46 @@ func TestLevelOrderTraversal(t *testing.T) {
 		require.Equal(t, [][]int{{3}, {9, 20}, {5, 22, 15, 7}, {45, 23, 12, 9801, 17, 99}}, levelOrder(root))
 	}
 }
+
+func TestReverseList(t *testing.T) {
+	{
+		head := &ListNode{
+			Val: 1,
+			Next: &ListNode{
+				Val: 2,
+				Next: &ListNode{
+					Val: 3,
+				},
+			},
+		}
+		newHead := reverseList(head)
+		require.Equal(t, []int{3, 2, 1}, getValues(newHead))
+	}
+	{
+		head := &ListNode{
+			Val: 1,
+		}
+		newHead := reverseList(head)
+		require.Equal(t, []int{1}, getValues(newHead))
+	}
+	{
+		newHead := reverseList(nil)
+		require.Equal(t, []int{}, getValues(newHead))
+	}
+	{
+		head := &ListNode{
+			Val: 1,
+			Next: &ListNode{
+				Val: 2,
+				Next: &ListNode{
+					Val: 3,
+					Next: &ListNode{
+						Val: 4,
+					},
+				},
+			},
+		}
+		newHead := reverseList(head)
+		require.Equal(t, []int{4, 3, 2, 1}, getValues(newHead))
+	}
+}

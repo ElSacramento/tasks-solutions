@@ -184,3 +184,55 @@ func TestMergeArrays(t *testing.T) {
 		require.Equal(t, expected, nums1)
 	}
 }
+
+func TestRotate(t *testing.T) {
+	{
+		nums := []int{1, 2, 3, 4, 5, 6}
+		k := 3
+		expected := []int{4, 5, 6, 1, 2, 3}
+		rotate(nums, k)
+		require.Equal(t, expected, nums)
+	}
+	{
+		nums := []int{1, 2, 3, 4, 5}
+		k := 3
+		expected := []int{3, 4, 5, 1, 2}
+		rotate(nums, k)
+		require.Equal(t, expected, nums)
+	}
+	{
+		nums := []int{1, 2, 3}
+		k := 3
+		expected := []int{1, 2, 3}
+		rotate(nums, k)
+		require.Equal(t, expected, nums)
+	}
+	{
+		nums := []int{1, 2, 3}
+		k := 1
+		expected := []int{3, 1, 2}
+		rotate(nums, k)
+		require.Equal(t, expected, nums)
+	}
+	{
+		nums := []int{1, 2, 3, 4, 5, 6}
+		k := 2
+		expected := []int{5, 6, 1, 2, 3, 4}
+		rotate(nums, k)
+		require.Equal(t, expected, nums)
+	}
+	{
+		nums := []int{1, 2, 3}
+		k := 4
+		expected := []int{3, 1, 2}
+		rotate(nums, k)
+		require.Equal(t, expected, nums)
+	}
+	{
+		nums := []int{1, 2, 3}
+		k := 6
+		expected := []int{1, 2, 3}
+		rotate(nums, k)
+		require.Equal(t, expected, nums)
+	}
+}

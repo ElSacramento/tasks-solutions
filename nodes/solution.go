@@ -314,3 +314,25 @@ func levelOrder(root *TreeNode) [][]int {
 	traverse(root.Right, 1, &result)
 	return result
 }
+
+// leetcode: 206
+// reverse list with recursion = O(n) just visit all nodes
+// approach with iteration reduce memory usage
+func reverseList(head *ListNode) *ListNode {
+	if head == nil {
+		return nil
+	}
+	reversed := reverse(head)
+	head.Next = nil
+	return reversed
+}
+
+func reverse(node *ListNode) *ListNode {
+	next := node.Next
+	if next != nil {
+		newHead := reverse(next)
+		next.Next = node
+		return newHead
+	}
+	return node
+}

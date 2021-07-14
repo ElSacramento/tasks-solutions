@@ -201,3 +201,26 @@ func reverseString(s []byte) {
 		j--
 	}
 }
+
+// leetcode: 242
+// O(n) + space O(52)
+func isAnagram(s string, t string) bool {
+	letters := make([]int, 52)
+
+	for _, ch := range s {
+		ind := int(ch - 'a')
+		letters[ind] += 1
+	}
+
+	for _, ch := range t {
+		ind := int(ch - 'a') + 26
+		letters[ind] += 1
+	}
+
+	for i := 0; i < 26; i++ {
+		if letters[i] != letters[i+26] {
+			return false
+		}
+	}
+	return true
+}

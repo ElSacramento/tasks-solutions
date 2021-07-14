@@ -114,3 +114,36 @@ func TestReverseString(t *testing.T) {
 		require.Equal(t, []byte{'h'}, s)
 	}
 }
+
+func TestAnagram(t *testing.T) {
+	{
+		s := "anagram"
+		tr := "nagrama"
+		require.True(t, isAnagram(s, tr))
+	}
+	{
+		s := "anagram"
+		tr := "nangram"
+		require.False(t, isAnagram(s, tr))
+	}
+	{
+		s := "a"
+		tr := "b"
+		require.False(t, isAnagram(s, tr))
+	}
+	{
+		s := "a"
+		tr := "a"
+		require.True(t, isAnagram(s, tr))
+	}
+	{
+		s := "aaan"
+		tr := "annn"
+		require.False(t, isAnagram(s, tr))
+	}
+	{
+		s := "aaan"
+		tr := "aaan"
+		require.True(t, isAnagram(s, tr))
+	}
+}
