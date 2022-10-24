@@ -99,19 +99,13 @@ func TestGetColumnsInterval(t *testing.T) {
 	})
 }
 
-type testMeeting struct {
-	from time.Time
-	to   time.Time
-	rule *rrule.RRule
-}
-
 func TestBusyness(t *testing.T) {
 	// one week with 30min slots
 	b := NewBusyness(7, 8, time.Minute*30)
 
 	currentTime := time.Now()
 
-	firstMeeting := testMeeting{
+	firstMeeting := Meeting{
 		from: currentTime.Add(4 * time.Hour),
 		to:   currentTime.Add(5 * time.Hour),
 	}
@@ -119,7 +113,7 @@ func TestBusyness(t *testing.T) {
 	require.Nil(t, err)
 	require.True(t, result)
 
-	secondMeeting := testMeeting{
+	secondMeeting := Meeting{
 		from: currentTime.Add(50 * time.Hour),
 		to:   currentTime.Add(50*time.Hour + 30*time.Minute),
 	}
@@ -133,7 +127,7 @@ func TestBusyness(t *testing.T) {
 		Count:   7,
 	})
 	require.Nil(t, err)
-	thirdMeeting := testMeeting{
+	thirdMeeting := Meeting{
 		from: currentTime.Add(6 * time.Hour),
 		to:   currentTime.Add(7 * time.Hour),
 		rule: everydayMeeting,
@@ -141,4 +135,37 @@ func TestBusyness(t *testing.T) {
 	result, err = b.BookIfPossible(thirdMeeting.from, thirdMeeting.to, thirdMeeting.rule)
 	require.Nil(t, err)
 	require.True(t, result)
+}
+
+func TestAppendDay(t *testing.T) {
+	t.Run("succes", func(t *testing.T) {
+		// one week with 30min slots
+		b := NewBusyness(7, 8, time.Minute*30)
+
+		appendDay := time.Now().Add(7 * 24 * time.Hour)
+		meetings := []AppendMeeting{
+			{from: appendDay.Add(10 * time.Hour), to: appendDay.Add(11 * time.Hour)},
+			{from: appendDay.Add(4 * time.Hour), to: appendDay.Add(6 * time.Hour)},
+			{from: appendDay.Add(3 * time.Hour), to: appendDay.Add(4 * time.Hour)},
+		}
+
+		err := b.AppendDay(meetings)
+		require.Nil(t, err)
+	})
+
+	t.Run("with crossing events", func(t *testing.T) {
+		// one week with 30min slots
+		b := NewBusyness(7, 8, time.Minute*30)
+
+		appendDay := time.Now().Add(7 * 24 * time.Hour)
+		meetings := []AppendMeeting{
+			{from: appendDay.Add(10 * time.Hour), to: appendDay.Add(11 * time.Hour)},
+			{from: appendDay.Add(4 * time.Hour), to: appendDay.Add(6 * time.Hour)},
+			{from: appendDay.Add(3 * time.Hour), to: appendDay.Add(4 * time.Hour)},
+			{from: appendDay.Add(3 * time.Hour), to: appendDay.Add(3*time.Hour + 30*time.Minute)},
+		}
+
+		err := b.AppendDay(meetings)
+		require.Equal(t, "crossing events", err.Error())
+	})
 }

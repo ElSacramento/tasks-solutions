@@ -11,9 +11,9 @@ import (
 /*
 	10:00 - 11:00 	11:00 - 12:00	12:00 - 13:00
 
-day1	0				1				0
-day2	1				1				1
-day3	1				0				1
+day1	0		1		0
+day2	1		1		1
+day3	1		0		1
 */
 type Busyness struct {
 	minInterval time.Duration
@@ -27,7 +27,7 @@ func NewBusyness(storedLen, storedCap int, minInterval time.Duration) *Busyness 
 	value := make([][]byte, storedLen, storedCap)
 
 	var dayIntervalsNumber = 24 * time.Hour / minInterval
-	for i := 0; i < int(storedLen); i++ {
+	for i := 0; i < len(value); i++ {
 		value[i] = make([]byte, dayIntervalsNumber)
 	}
 
@@ -174,4 +174,50 @@ func (b *Busyness) bookSlot(rows, columns []int) (bool, error) {
 		}
 	}
 	return true, nil
+}
+
+type Meeting struct {
+	from time.Time
+	to   time.Time
+	rule *rrule.RRule
+}
+
+type AppendMeeting struct {
+	from time.Time
+	to   time.Time
+}
+
+func (b *Busyness) AppendDay(meetings []AppendMeeting) error {
+	// todo: check that day to append doesn't exist in b.value
+
+	defer b.rwLock.Unlock()
+	b.rwLock.Lock()
+
+	columnsIndexesToChange := make([]int, 0)
+	for _, m := range meetings {
+		columns, getColumnsErr := b.getColumnsInterval(m.from, m.to)
+		if getColumnsErr != nil {
+			return getColumnsErr
+		}
+		columnsIndexesToChange = append(columnsIndexesToChange, columns...)
+	}
+
+	if len(columnsIndexesToChange) > len(b.value[0]) {
+		return errors.New("impossible situation")
+	}
+
+	newRow := make([]byte, len(b.value[0]))
+	for _, ind := range columnsIndexesToChange {
+		if ind >= len(newRow) || ind < 0 {
+			return errors.New("wrong index to change")
+		}
+		if newRow[ind] == 1 {
+			return errors.New("crossing events")
+		}
+		newRow[ind] = 1
+	}
+
+	b.value = append(b.value, newRow)
+	b.value = b.value[1:]
+	return nil
 }
