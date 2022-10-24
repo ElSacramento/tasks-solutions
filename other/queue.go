@@ -79,14 +79,14 @@ func isValid(s string) bool {
 			continue
 		}
 		// closed
-		last := stack[len(stack) - 1]
+		last := stack[len(stack)-1]
 		if !isPair(last, elem) {
 			return false
 		}
 		stack = stack[:len(stack)-1]
 	}
-	if len(stack) != 0 {
-		return false
+	if len(stack) == 0 {
+		return true
 	}
-	return true
+	return false
 }
