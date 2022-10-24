@@ -31,7 +31,8 @@ func NewBusyness(storedLen, storedCap int, minInterval time.Duration) *Busyness 
 		value[i] = make([]byte, dayIntervalsNumber)
 	}
 
-	startDate := time.Now()
+	year, month, day := time.Now().Date()
+	startDate := time.Date(year, month, day, 0, 0, 0, 0, time.Now().Location())
 
 	return &Busyness{
 		minInterval: minInterval,
@@ -41,10 +42,22 @@ func NewBusyness(storedLen, storedCap int, minInterval time.Duration) *Busyness 
 	}
 }
 
+func (b *Busyness) getStartDate() time.Time {
+	return b.startDate
+}
+
 func isEqualDate(time1, time2 time.Time) bool {
 	year1, month1, day1 := time1.Date()
 	year2, month2, day2 := time2.Date()
 	return year1 == year2 && month1 == month2 && day1 == day2
+}
+
+func (b *Busyness) getRowsLen() int {
+	return len(b.value)
+}
+
+func (b *Busyness) getColumnsLen() int {
+	return len(b.value[0])
 }
 
 func (b *Busyness) getRowIndex(t time.Time) int {
@@ -57,10 +70,14 @@ func (b *Busyness) getRowIndex(t time.Time) int {
 
 func (b *Busyness) getColumnIndex(t time.Time) int {
 	index := (t.Hour()*60 + t.Minute()) / int(b.minInterval.Minutes())
-	if index < 0 || index >= len(b.value[0]) {
+	if index < 0 || index >= b.getColumnsLen() {
 		return -1
 	}
 	return index
+}
+
+func (b *Busyness) getTimeFromRowColumn(row, column int) time.Time {
+	return b.startDate.Add(24*time.Hour*time.Duration(row) + b.minInterval*time.Duration(column))
 }
 
 func (b *Busyness) getReccurentRowsIDs(rule *rrule.RRule) ([]int, error) {
@@ -74,7 +91,7 @@ func (b *Busyness) getReccurentRowsIDs(rule *rrule.RRule) ([]int, error) {
 			return nil, errors.New("wrong day")
 		}
 
-		if index >= len(b.value) {
+		if index >= b.getRowsLen() {
 			return indexes, nil
 		}
 
@@ -85,76 +102,54 @@ func (b *Busyness) getReccurentRowsIDs(rule *rrule.RRule) ([]int, error) {
 	return indexes, nil
 }
 
-func (b *Busyness) getColumnsInterval(from, to time.Time) ([]int, error) {
-	fromColumn := b.getColumnIndex(from)
-	toColumn := b.getColumnIndex(to)
+func (b *Busyness) getColumnsInterval(m *Meeting) (pairInt, error) {
+	fromColumn := b.getColumnIndex(m.from)
+	toColumn := b.getColumnIndex(m.to)
 
 	if fromColumn == -1 || toColumn == -1 {
-		return nil, errors.New("impossible time of the day")
+		return pairInt{}, errors.New("impossible time of the day")
 	}
-
-	indexes := make([]int, 0)
-	for i := fromColumn; i < toColumn; i++ {
-		indexes = append(indexes, i)
-	}
-	return indexes, nil
+	return pairInt{fromColumn, toColumn - 1}, nil
 }
 
-func (b *Busyness) getRowsInterval(from, to time.Time, rule *rrule.RRule) ([]int, error) {
+func (b *Busyness) getRowsIndexes(m *Meeting) ([]int, error) {
 	indexes := make([]int, 0)
-	if rule == nil {
-		fromRow := b.getRowIndex(from)
+	if m.rule == nil {
+		fromRow := b.getRowIndex(m.from)
 
 		if fromRow == -1 {
 			return nil, errors.New("wrong fromDay")
 		}
 
-		if fromRow >= len(b.value) {
+		if fromRow >= b.getRowsLen() {
 			return nil, errors.New("event is out of the period")
 		}
 
 		toRow := fromRow
 
-		if !isEqualDate(from, to) {
+		if !isEqualDate(m.from, m.to) {
 			// event that starts today and will be finished tomorrow
-			toRow = b.getRowIndex(to)
+			toRow = b.getRowIndex(m.to)
 
 			if toRow == -1 {
 				return nil, errors.New("wrong toDay")
 			}
 		}
 
-		for i := fromRow; i <= toRow && i < len(b.value); i++ {
+		for i := fromRow; i <= toRow && i < b.getRowsLen(); i++ {
 			indexes = append(indexes, i)
 		}
 		return indexes, nil
 	}
 
-	indexes, err := b.getReccurentRowsIDs(rule)
+	indexes, err := b.getReccurentRowsIDs(m.rule)
 	if err != nil {
 		return nil, err
 	}
 	return indexes, nil
 }
 
-func (b *Busyness) BookIfPossible(from, to time.Time, rule *rrule.RRule) (bool, error) {
-	// todo: validate that from, to and rrule in our stored period of time
-	// todo: validate that reccurent event from and to happen in one day
-
-	columns, getColumnsErr := b.getColumnsInterval(from, to)
-	if getColumnsErr != nil {
-		return false, getColumnsErr
-	}
-
-	rows, getRowsErr := b.getRowsInterval(from, to, rule)
-	if getRowsErr != nil {
-		return false, getRowsErr
-	}
-
-	return b.bookSlot(rows, columns)
-}
-
-func (b *Busyness) bookSlot(rows, columns []int) (bool, error) {
+func (b *Busyness) bookTimeSlot(rows []int, columnsInterval pairInt) bool {
 	defer b.rwLock.Unlock()
 	b.rwLock.Lock()
 
@@ -162,18 +157,35 @@ func (b *Busyness) bookSlot(rows, columns []int) (bool, error) {
 	// intervals max value is 48 for 30min minInterval
 	// days max value is 90 for 3 months stored period
 	for _, i := range rows {
-		for _, j := range columns {
+		for j := columnsInterval[0]; j <= columnsInterval[1]; j++ {
 			if b.value[i][j] == 1 {
-				return false, nil
+				return false
 			}
 		}
 	}
 	for _, i := range rows {
-		for _, j := range columns {
+		for j := columnsInterval[0]; j <= columnsInterval[1]; j++ {
 			b.value[i][j] = 1
 		}
 	}
-	return true, nil
+	return true
+}
+
+func (b *Busyness) checkTimeSlot(rows []int, columnsInterval pairInt) bool {
+	defer b.rwLock.RUnlock()
+	b.rwLock.RLock()
+
+	// O(days*intervals)*2
+	// intervals max value is 48 for 30min minInterval
+	// days max value is 90 for 3 months stored period
+	for _, i := range rows {
+		for j := columnsInterval[0]; j <= columnsInterval[1]; j++ {
+			if b.value[i][j] == 1 {
+				return false
+			}
+		}
+	}
+	return true
 }
 
 type Meeting struct {
@@ -182,12 +194,7 @@ type Meeting struct {
 	rule *rrule.RRule
 }
 
-type AppendMeeting struct {
-	from time.Time
-	to   time.Time
-}
-
-func (b *Busyness) AppendDay(meetings []AppendMeeting) error {
+func (b *Busyness) AppendDay(meetings []Meeting) error {
 	// todo: check that day to append doesn't exist in b.value
 
 	defer b.rwLock.Unlock()
@@ -195,18 +202,20 @@ func (b *Busyness) AppendDay(meetings []AppendMeeting) error {
 
 	columnsIndexesToChange := make([]int, 0)
 	for _, m := range meetings {
-		columns, getColumnsErr := b.getColumnsInterval(m.from, m.to)
+		columnsInterval, getColumnsErr := b.getColumnsInterval(&m)
 		if getColumnsErr != nil {
 			return getColumnsErr
 		}
-		columnsIndexesToChange = append(columnsIndexesToChange, columns...)
+		for i := columnsInterval[0]; i <= columnsInterval[1]; i++ {
+			columnsIndexesToChange = append(columnsIndexesToChange, i)
+		}
 	}
 
-	if len(columnsIndexesToChange) > len(b.value[0]) {
+	if len(columnsIndexesToChange) > b.getColumnsLen() {
 		return errors.New("impossible situation")
 	}
 
-	newRow := make([]byte, len(b.value[0]))
+	newRow := make([]byte, b.getColumnsLen())
 	for _, ind := range columnsIndexesToChange {
 		if ind >= len(newRow) || ind < 0 {
 			return errors.New("wrong index to change")
@@ -220,4 +229,92 @@ func (b *Busyness) AppendDay(meetings []AppendMeeting) error {
 	b.value = append(b.value, newRow)
 	b.value = b.value[1:]
 	return nil
+}
+
+type pairInt [2]int
+
+func (b *Busyness) getPossiblePairs(currentIndex int, startPair pairInt) []pairInt {
+	result := make([]pairInt, 0)
+	i := 1
+	withLeft := startPair[0]-i > currentIndex
+	// O(n)
+	for (startPair[1]+i < b.getColumnsLen()) || (startPair[0]-i >= 0) {
+		if withLeft && (startPair[0]-i >= 0) {
+			leftPair := pairInt{startPair[0] - i, startPair[1] - i}
+			result = append(result, leftPair)
+
+			withLeft = startPair[0]-(i+1) > currentIndex
+		}
+
+		if startPair[1]+i < b.getColumnsLen() {
+			rightPair := pairInt{startPair[0] + i, startPair[1] + i}
+			result = append(result, rightPair)
+		}
+
+		i += 1
+	}
+	return result
+}
+
+func (b *Busyness) BookOrGetAvailableSlots(m *Meeting, maxNumber int) (bool, []Meeting, error) {
+	// todo: validate that from, to and rrule in our stored period of time
+	// todo: validate that reccurent event from and to happen in one day
+	// todo: validate that from < to, from > time.Now
+
+	// time slots
+	columnsInterval, getColumnsErr := b.getColumnsInterval(m)
+	if getColumnsErr != nil {
+		return false, nil, getColumnsErr
+	}
+
+	// days
+	rows, getRowsErr := b.getRowsIndexes(m)
+	if getRowsErr != nil {
+		return false, nil, getRowsErr
+	}
+
+	if len(rows) == 0 {
+		return false, nil, errors.New("empty period")
+	}
+
+	bookStatus := b.bookTimeSlot(rows, columnsInterval)
+	if bookStatus {
+		return true, nil, nil
+	}
+
+	// dont need available slots
+	if maxNumber <= 0 {
+		return false, nil, nil
+	}
+
+	currentIndex := -1
+	if isEqualDate(time.Now(), m.from) {
+		// the same day
+		currentIndex = b.getColumnIndex(time.Now())
+	}
+
+	possibleIntervals := b.getPossiblePairs(currentIndex, columnsInterval)
+
+	possibleMeetings := make([]Meeting, 0)
+	for _, interval := range possibleIntervals {
+		chekStatus := b.checkTimeSlot(rows, interval)
+		if chekStatus {
+			newMeeting := Meeting{
+				from: b.getTimeFromRowColumn(rows[0], interval[0]),
+				to:   b.getTimeFromRowColumn(rows[0], interval[1]+1),
+			}
+			if m.rule != nil {
+				newRule := *m.rule
+				newRule.DTStart(newMeeting.from)
+				newMeeting.rule = &newRule
+			}
+
+			possibleMeetings = append(possibleMeetings, newMeeting)
+		}
+
+		if len(possibleMeetings) == maxNumber {
+			return false, possibleMeetings, nil
+		}
+	}
+	return false, possibleMeetings, nil
 }
