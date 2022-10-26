@@ -116,6 +116,54 @@ func TestGetMeetingLength(t *testing.T) {
 	})
 }
 
+func TestConvertToBytes(t *testing.T) {
+	t.Run("one byte sequence", func(t *testing.T) {
+		result := convertToBytes([]int{2}, 2)
+		expected := []ByteInfo{
+			{index: 0, value: 0b00110000},
+		}
+		require.Equal(t, expected, result)
+
+		result = convertToBytes([]int{0}, 2)
+		expected = []ByteInfo{
+			{index: 0, value: 0b11000000},
+		}
+		require.Equal(t, expected, result)
+
+		result = convertToBytes([]int{6}, 2)
+		expected = []ByteInfo{
+			{index: 0, value: 0b00000011},
+		}
+		require.Equal(t, expected, result)
+	})
+	t.Run("two bytes sequence", func(t *testing.T) {
+		result := convertToBytes([]int{6}, 4)
+		expected := []ByteInfo{
+			{index: 0, value: 0b00000011},
+			{index: 1, value: 0b11000000},
+		}
+		require.Equal(t, expected, result)
+	})
+	t.Run("more bytes sequence", func(t *testing.T) {
+		result := convertToBytes([]int{6}, 12)
+		expected := []ByteInfo{
+			{index: 0, value: 0b00000011},
+			{index: 1, value: 0b11111111},
+			{index: 2, value: 0b11000000},
+		}
+		require.Equal(t, expected, result)
+	})
+	t.Run("periodic bytes", func(t *testing.T) {
+		result := convertToBytes([]int{2, 10, 18}, 2)
+		expected := []ByteInfo{
+			{index: 0, value: 0b00110000},
+			{index: 1, value: 0b00110000},
+			{index: 2, value: 0b00110000},
+		}
+		require.Equal(t, expected, result)
+	})
+}
+
 func TestAppendDay(t *testing.T) {
 	t.Run("succes", func(t *testing.T) {
 		// one week with 30min slots

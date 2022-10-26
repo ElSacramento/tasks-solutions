@@ -131,20 +131,20 @@ type ByteInfo struct {
 	value byte
 }
 
-func (b *Busyness) convertToBytes(startIndexes []int, meetingLength int) []ByteInfo {
+func convertToBytes(startBitIndexes []int, sequenceLength int) []ByteInfo {
 	expectedBytes := make([]ByteInfo, 0)
-	for _, i := range startIndexes {
+	for _, i := range startBitIndexes {
 		byteFromIndex, bitFromIndex := getByteIndexes(i)
-		bitToIndex := bitFromIndex + meetingLength - 1
+		bitToIndex := bitFromIndex + sequenceLength - 1
 		byteToIndex := byteFromIndex
-		if bitToIndex >= bitsLen {
+		for bitToIndex >= bitsLen {
 			byteToIndex += 1
 			bitToIndex -= bitsLen
 		}
 
 		if byteFromIndex == byteToIndex {
 			// create 00001110
-			// meetingLength = 3
+			// sequenceLength = 3
 			// bitFromIndex = 4, bitToIndex = 6
 			res := byte(1)
 			for i := 0; i < bitToIndex-bitFromIndex; i++ {
@@ -162,10 +162,10 @@ func (b *Busyness) convertToBytes(startIndexes []int, meetingLength int) []ByteI
 		}
 
 		// create 00000011 and 11000000
-		// meetingLength = 4
+		// sequenceLength = 4
 		// bitFromIndex = 6, bitToIndex = 1
 		res := byte(1)
-		for i := 0; i <= bitsLen-bitFromIndex-1; i++ {
+		for i := 0; i < bitsLen-bitFromIndex-1; i++ {
 			res = res << 1
 			res = res + byte(1)
 		}
@@ -175,7 +175,7 @@ func (b *Busyness) convertToBytes(startIndexes []int, meetingLength int) []ByteI
 			value: res,
 		})
 
-		// if period longer that 2 days
+		// if period longer than 2 bytes
 		for i := 1; i < byteToIndex-byteFromIndex; i++ {
 			expectedBytes = append(expectedBytes, ByteInfo{
 				index: byteFromIndex + i,
@@ -192,7 +192,7 @@ func (b *Busyness) convertToBytes(startIndexes []int, meetingLength int) []ByteI
 		res = res << byte(bitsLen-bitToIndex-1)
 		// now we have 11000000
 		expectedBytes = append(expectedBytes, ByteInfo{
-			index: bitToIndex,
+			index: byteToIndex,
 			value: res,
 		})
 	}
@@ -259,7 +259,7 @@ func (b *Busyness) AppendDay(meetings []Meeting) error {
 		}
 
 		fromIndex := b.getBitIndex(m.from)
-		bytesInfo = append(bytesInfo, b.convertToBytes([]int{fromIndex}, meetingLength)...)
+		bytesInfo = append(bytesInfo, convertToBytes([]int{fromIndex}, meetingLength)...)
 	}
 
 	newDay := make([]byte, b.dayBytesLen)
@@ -322,7 +322,7 @@ func (b *Busyness) BookOrGetAvailableSlots(m *Meeting, maxNumber int) (bool, []M
 		return false, nil, errors.New("empty period")
 	}
 
-	bytesInfo := b.convertToBytes(startIndexes, meetingLength)
+	bytesInfo := convertToBytes(startIndexes, meetingLength)
 	bookStatus := b.bookTimeSlot(bytesInfo)
 	if bookStatus {
 		return true, nil, nil
